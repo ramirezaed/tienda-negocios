@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('cart_items', function (Blueprint $table) {
             $table->id();
             //cascadaOndelete-> cuando se borra un carrito se borra el cart_items
-            $table->foreignId('cart_id')->constrained('carts')->cascadeOnDelete();
+            $table->foreignId('cart_id')->constrained('cart')->cascadeOnDelete();
             $table->foreignId('product_id')->constrained('products');
             $table->unsignedInteger('quantity');
             $table->timestamps();
