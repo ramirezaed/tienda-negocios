@@ -1,5 +1,7 @@
 <?php
 
+//esta table se crea para evitar una relacion de N <-> N entre producto y carrito
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer("stock");
             //se agrega la clave forane en la tabla con cardinalidad mcuhos
             //muchos productos pertenecen a una categoria
-            $table->foreign("category_id")->constrained("categories");
+            $table->foreignId("category_id")->constrained("categories");
             $table->timestamps();
         });
     }
