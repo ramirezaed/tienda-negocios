@@ -75,4 +75,18 @@ class UserController extends Controller
             return response()->json(["message" => "error interno al intentar eliminar al usuario"], 500);
         }
     }
+
+    //funcion para obtener un los datos de un usuario
+    public function getById(int $id)
+    {
+        try {
+            $user = User::find($id);
+            if (!$user) {
+                return response()->json(["message" => "usuario no encontrado"], 404);
+            }
+            return response()->json($user);
+        } catch (\Exception $e) {
+            return response()->json(["message" => "error interno al intentar buscar al usuario"], 500);
+        }
+    }
 }
