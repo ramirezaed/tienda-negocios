@@ -18,6 +18,7 @@ class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+
     // define el nombre en plural de la tabla que este modelo debe uasr
     protected $table = 'users';
 
