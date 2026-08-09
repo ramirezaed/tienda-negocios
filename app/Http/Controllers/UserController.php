@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Laravel\Mcp\Request as McpRequest;
 
 class UserController extends Controller
 {
@@ -37,6 +38,7 @@ class UserController extends Controller
         ]);
         try {
             //busca el id en para ver si el usuario existe o no
+            /** @var \App\Models\User|null $user */
             $user = User::find($id);
             //si el usario no existe
             if (!$user) {
@@ -52,7 +54,25 @@ class UserController extends Controller
     //funcion para mostrsr todos los usuarios
     public function index()
     {
-        $users = User::all();
-        return response()->json($users);
+        try {
+            $users = User::all();
+            return response()->json($users);
+        } catch (\Exception $e) {
+            return response()->json(["message" => "error interno al intentar obtener lista de usuarios"], 500);
+        }
+    }
+    //funcion para elimiar un usuario
+    public function delete(int $id)
+    {
+        try {
+            $user = User::find($id);
+            if (!$user) {
+                return response()->json(["message" => "usuario no encontrado"], 404);
+            }
+            $user->delete();
+            return response()->json(["message" => "usuario eliminado con exito"], 200);
+        } catch (\Exception $e) {
+            return response()->json(["message" => "error interno al intentar eliminar al usuario"], 500);
+        }
     }
 }
