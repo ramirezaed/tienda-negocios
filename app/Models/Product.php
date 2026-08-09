@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Product extends Model
+{
+    //define que tabla usa este modelo
+    protected $table = "products";
+    protected $fillable = [
+        "name",
+        "description",
+        "price",
+        "stock",
+    ];
+
+    //un producto pertenece a una categoria
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+    // un producto puede estar en muchos o ningun cart_items
+    public function cartItem()
+    {
+        return $this->hasMany(CartItem::class);
+    }
+}
