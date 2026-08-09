@@ -49,6 +49,7 @@ class UserController extends Controller
             return response()->json(["message" => "error interno al intentar actualizar un usuario"], 500);
         }
     }
+    //funcion para mostrsr todos los usuarios
     public function index()
     {
         $users = User::all();
