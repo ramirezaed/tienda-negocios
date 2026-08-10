@@ -66,4 +66,18 @@ class CategoryController extends Controller
             return response()->json(["message" => "error interno al intentar actualizar una categoria"], 500);
         }
     }
+
+    public function delete(int $id)
+    {
+        try {
+            $category = Category::find($id);
+            if (!$category) {
+                return response()->json(["message" => "categoria no encontrada"], 404);
+            }
+            $category->delete();
+            return response()->json(["message" => "categoria eliminada con exito"], 200);
+        } catch (\Exception $e) {
+            return response()->json(["message" => "error interno al intentar eliminar una categoria"], 500);
+        }
+    }
 }
