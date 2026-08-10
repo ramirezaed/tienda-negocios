@@ -30,55 +30,62 @@ class CartController extends Controller
         }
     }
 
-    //funcion para agregar un producto al carrrito
-    public function addProduct(Request $request)
+    public function addProduct(Request $request): JsonResponse
     {
-        $validated = $request->validate([
+        $data = $request->validate([
             'user_id' => 'required|integer|exists:users,id',
             'product_id' => 'required|integer|exists:products,id',
             'quantity' => 'required|integer|min:1',
         ]);
+
         try {
-            // verifica si hay stock suficiente 
-            $product = Product::find($validated['product_id']);
-            if ($product->stock < $validated['quantity']) {
-                return response()->json(['message' => 'no hay stock disponible'], 400);
+            //verfica que el prodcuto exista
+            $product = Product::findOrFail($data['product_id']);
+            if ($product->stock < $data['quantity']) {
+                return response()->json(['message' => 'No hay stock suficiente'], 400);
             }
-            // busca el carrito del usuario o crea uno de forma masiva si no existe
-            $cart = Cart::firstOrCreate(['user_id' => $validated['user_id']]);
-            // verificar si el producto ya estaba en el carrito
+            //busca el carrito que pertenece al usuario, si no tiene lo crea
+            $cart = Cart::firstOrCreate(['user_id' => $data['user_id']]);
+
+            //verifica si ese producto ya esta en el carro
             $cartItem = CartItem::where('cart_id', $cart->id)
-                ->where('product_id', $validated['product_id'])
+                ->where('product_id', $product->id)
                 ->first();
 
+            //si el producto ya esta en el carrito suma la cantidad y se calcula el total
             if ($cartItem) {
-                // si ya existe, validamos el stock total acumulado y suma la cantidad
-                if ($product->stock < ($cartItem->quantity + $validated['quantity'])) {
-                    return response()->json(['message' => 'no hay stock suficiente'], 400);
-                }
-                $cartItem->increment('quantity', $validated['quantity']);
+                $quantity = $cartItem->quantity + $data['quantity'];
+                $cartItem->update([
+                    'quantity' => $quantity,
+                    'sub_total' => $quantity * $product->price,
+                ]);
             } else {
-                // si es un producto nuevo en el carrito lo agrega
+                //si el producto no estaba en el carrito crea un nuevo cartItem
                 CartItem::create([
                     'cart_id' => $cart->id,
-                    'product_id' => $validated['product_id'],
-                    'quantity' => $validated['quantity'],
+                    'product_id' => $product->id,
+                    'quantity' => $data['quantity'],
                     'price' => $product->price,
+                    'sub_total' => $data['quantity'] * $product->price,
                 ]);
             }
-            //en esta etapa del proyecto el stock del producto se descuenta al momento de 
-            //agregar el producto al carrito
-            $product->decrement('stock', $validated['quantity']);
-            return response()->json(['message' => 'producto agregado cn exito'], 200);
+
+            //en esta etapa del proyecto el stock se decuenta al agregar al acarrito
+            //descuenta el stock de los productos
+            $product->decrement('stock', $data['quantity']);
+            $cart->update([
+                'total' => CartItem::where('cart_id', $cart->id)
+                    ->sum('sub_total')
+            ]);
+
+            return response()->json(['message' => 'Producto agregado con exito']);
         } catch (\Exception $e) {
-            // return response()->json(['message' => 'error interno al intentar agregar un producto al carrito'], 500);
-            return response()->json([
-                "message" => $e->getMessage(),
-                "file" => $e->getFile(),
-                "line" => $e->getLine(),
-            ], 500);
+            return response()->json(['message' => 'error innterno al agregar un producto al carrito'], 500);
         }
     }
+
+
+
     //funcion para vaciar el carrito
     public function clear(Request $request)
     {
@@ -102,6 +109,7 @@ class CartController extends Controller
             }
             // elimina todos los productos de la tabla 'cart_items'
             CartItem::where('cart_id', $cart->id)->delete();
+            $cart->update(["total" => 0.00]);
             return response()->json(['message' => 'el carrito se vacio correctamente '], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'error innterno al intentar vaciar el carrito'], 500);
@@ -127,10 +135,16 @@ class CartController extends Controller
             if (!$cartItem) {
                 return response()->json(['message' => 'producto no encontrado'], 404);
             }
-            //Eliminar el registro de la tabla intermedia
+            //elimina el item
             $cartItem->delete();
+            ///Suma los subtotales de los productos que queden
+            $nuevoTotal = CartItem::where('cart_id', $cart->id)->sum('sub_total');
+
+            $cart->update(['total' => $nuevoTotal]);
+
             //cuando se elimina el producto del carrtio se incrementa su stock 
             $cartItem->decrement('stock', $validated['quantity']);
+
             return response()->json(['message' => 'producto quitado con éxito'], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'error interno al intentar quitar el producto del carrito'], 500);
