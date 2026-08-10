@@ -15,6 +15,7 @@ class CartItem extends Model
         "product_id",
         "quantity",
         "price",
+        "sub_total",
     ];
     //un item pertenece a un carrito
     public function cart()

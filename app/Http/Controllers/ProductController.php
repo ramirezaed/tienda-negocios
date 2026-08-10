@@ -11,7 +11,7 @@ class ProductController extends Controller
     //funcion para registrar un nuevo producto
     public function register(Request $request)
     {
-        $validateDate = $request->validate([
+        $validateData = $request->validate([
             "name" => "required|string",
             "description" => "required|string",
             "price" => "required|decimal:0,2|gt:0",
@@ -19,10 +19,15 @@ class ProductController extends Controller
             "category_id" => "required|integer|exists:categories,id",
         ]);
         try {
-            $producto = Product::create();
+            $producto = Product::create($validateData);
             return response()->json($producto, 201);
         } catch (\Exception $e) {
-            return response()->json(["message" => "error interno al intentar registrar un nuevo producto"], 500);
+            //     return response()->json(["message" => "error interno al intentar registrar un nuevo producto"], 500);
+            return response()->json([
+                "message" => $e->getMessage(),
+                "file" => $e->getFile(),
+                "line" => $e->getLine(),
+            ], 500);
         }
     }
     //funcion para mostrar todos los productos
@@ -42,7 +47,7 @@ class ProductController extends Controller
         try {
             $product = Product::find($id);
             //verifica que el producto exista
-            if ($product) {
+            if (!$product) {
                 return response()->json(["message" => "producto no encontrado"], 404);
             }
             return response()->json($product, 200);
@@ -53,11 +58,11 @@ class ProductController extends Controller
     //funcion para actualizar un producto
     public function update(Request $request, int $id)
     {
-        $validateDate = $request->validate([
+        $validateData = $request->validate([
             "name" => "sometimes|required|string",
             "description" => "sometimes|required|string",
-            "price" => "required|decimal:0,2|gt:0", //gt: 0 es para verificar que sea mayor que 0
-            "stock" => "required|integer|gt:0",
+            "price" => "sometimes|required|decimal:0,2|gt:0", //gt: 0 es para verificar que sea mayor que 0
+            "stock" => "sometimes|required|integer|gt:0",
             "category_id" => "sometimes|required|integer|exists:categories,id"
         ]);
         try {
@@ -65,7 +70,7 @@ class ProductController extends Controller
             if (!$product) {
                 return response()->json(["message", "producto no encontrado"], 404);
             }
-            $product->update($validateDate);
+            $product->update($validateData);
             return response()->json($product, 200);
         } catch (\Exception $e) {
             return response()->json(["message" => "error interno al intentar actualizar un producto"], 500);
@@ -84,6 +89,19 @@ class ProductController extends Controller
             return response()->json(["message" => "producto eliminado con exito", 200]);
         } catch (\Exception $e) {
             return response()->json(["message" => "error interno al intentar eliminar un producto"], 500);
+        }
+    }
+
+    //funcion para mostrar los productos con blade
+    public function catalog()
+    {
+        try {
+            // t raelos productos paginados de 10 en 10 e incluimos su categoría
+            $products = Product::with('category')->paginate(10);
+            // devulve la vista Blade de productos
+            return view('products.catalog', compact('products'));
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'No se pudo cargar el catálogo de productos.');
         }
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Ruta para el listado navegable de productos con Blade
+Route::get('/catalogo', [ProductController::class, 'catalog'])->name('products.catalog');

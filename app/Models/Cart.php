@@ -13,6 +13,7 @@ class Cart extends Model
     //se  define los campos para la insercion masiva
     protected $fillable = [
         "user_id",
+        "total",
     ];
 
     //se define la relacioon inversa con usuario

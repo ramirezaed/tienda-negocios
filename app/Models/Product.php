@@ -13,6 +13,7 @@ class Product extends Model
         "description",
         "price",
         "stock",
+        "category_id",
     ];
 
     //un producto pertenece a una categoria
