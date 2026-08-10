@@ -2,14 +2,32 @@
 
 namespace App\service;
 
+use App\Exceptions\CartNotFoundException;
 use App\Exceptions\InsufficientStockException;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class CartService
 {
+
+    // metodo para devolver stock reutilizable por clear() y deleteCart()
+    //Usa Collection en la firma para evitar este error:
+    //Parameter $items has no type information available.
+    private function restoreStockForItems(Collection $items): void
+    {
+        //items es la coleccion item el elemento
+        foreach ($items as $item) {
+            $product = Product::find($item->product_id);
+            //si encuentra el producto agrega cantidad al stock
+            if ($product) {
+                $product->increment('stock', $item->quantity);
+            }
+        }
+    }
+
     public function addProduct(int $userId, int $productId, int $quantity): CartItem
     {
         //transaction asegura que se ejecute todo o nada
@@ -52,5 +70,20 @@ class CartService
 
             return $cartItem;
         });
+    }
+    public function clear(int $userId): Cart
+    {
+        $cart = Cart::with('items')->where('user_id', $userId)->first();
+
+        if (!$cart) {
+            throw new CartNotFoundException();
+        }
+
+        $this->restoreStockForItems($cart->items);
+
+        $cart->items()->delete();
+        $cart->update(['total' => 0.00]);
+
+        return $cart;
     }
 }
