@@ -47,7 +47,7 @@ class ProductController extends Controller
         try {
             $product = Product::find($id);
             //verifica que el producto exista
-            if ($product) {
+            if (!$product) {
                 return response()->json(["message" => "producto no encontrado"], 404);
             }
             return response()->json($product, 200);
