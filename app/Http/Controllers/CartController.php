@@ -138,9 +138,9 @@ class CartController extends Controller
             //elimina el item
             $cartItem->delete();
             ///Suma los subtotales de los productos que queden
-            $nuevoTotal = CartItem::where('cart_id', $cart->id)->sum('sub_total');
+            $newTotal = CartItem::where('cart_id', $cart->id)->sum('sub_total');
 
-            $cart->update(['total' => $nuevoTotal]);
+            $cart->update(['total' => $newTotal]);
 
             //cuando se elimina el producto del carrtio se incrementa su stock 
             $cartItem->decrement('stock', $validated['quantity']);
