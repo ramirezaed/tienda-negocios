@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AddUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -20,15 +21,10 @@ class UserController extends Controller
             return response()->json(["message" => "error interno al intentar registrar un usuario"], 500);
         }
     }
+
     //funcion  para modificar un usuario
-    public function update(Request $request, int $id)
+    public function update(UpdateUserRequest $request, int $id)
     {
-        $validateData = $request->validate([
-            //sometimes : valida solo si viene en la peticion
-            "name" => "sometimes|required|string",
-            "password" => "sometimes|required|string",
-            "role" => "sometimes|required|string",
-        ]);
         try {
             //busca el id en para ver si el usuario existe o no
             $user = User::find($id);
@@ -37,7 +33,7 @@ class UserController extends Controller
                 return response()->json(["message" => "usuario no encontrado"], 404);
             }
             //si el usuario existe valida los datos, actualiza el registro
-            $user->update($validateData);
+            $user->update($request->validated());
             return response()->json($user, 200);
         } catch (\Exception $e) {
             return response()->json(["message" => "error interno al intentar actualizar un usuario"], 500);
