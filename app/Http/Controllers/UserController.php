@@ -38,7 +38,7 @@ class UserController extends Controller
         ]);
         try {
             //busca el id en para ver si el usuario existe o no
-            /** @var \App\Models\User|null $user */
+
             $user = User::find($id);
             //si el usario no existe
             if (!$user) {
