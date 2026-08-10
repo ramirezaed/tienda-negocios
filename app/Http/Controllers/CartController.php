@@ -10,14 +10,17 @@ use Illuminate\Http\JsonResponse;
 
 class CartController extends Controller
 {
-    //funcion para ver el carrito
     public function index(Request $request)
     {
         try {
             //input se utiliza para recuper datos que el cliente envia a travez de una peticion http
             $userId = $request->input('user_id');
-            //busca el carrito que pertenece al usuario y devuleve el primero
-            $cart = Cart::where('user_id', $userId)->with('items.product')->first();
+            // muestra el carrito con los datos selecionado
+            $cart = Cart::where('user_id', $userId)
+                ->with(['items.product' => function ($query) {
+                    $query->select('id', 'name', 'description', 'price', 'category_id');
+                }])->first();
+
             if (!$cart) {
                 return response()->json(['message' => 'el carrito esta vacio', 'items' => []], 200);
             }
@@ -68,7 +71,12 @@ class CartController extends Controller
             $product->decrement('stock', $validated['quantity']);
             return response()->json(['message' => 'producto agregado cn exito'], 200);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'error interno al intentar agregar un producto al carrito'], 500);
+            // return response()->json(['message' => 'error interno al intentar agregar un producto al carrito'], 500);
+            return response()->json([
+                "message" => $e->getMessage(),
+                "file" => $e->getFile(),
+                "line" => $e->getLine(),
+            ], 500);
         }
     }
     //funcion para vaciar el carrito
