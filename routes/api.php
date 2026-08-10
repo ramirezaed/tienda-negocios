@@ -33,7 +33,7 @@ Route::prefix('categories')->group(function () {
 Route::prefix('products')->group(function () {
     Route::post('/', [ProductController::class, 'store']);           // registrar
     Route::get('/', [ProductController::class, 'index']);               //lista de prodyctos
-    Route::get('/{id}', [ProductController::class, 'getById']);        //buscar por id
+    Route::get('/{id}', [ProductController::class, 'show']);        //buscar por id
     Route::put('/{id}', [ProductController::class, 'update']);         // modificar por ID
     Route::delete('/{id}', [ProductController::class, 'delete']);       // eliminar por ID
 });

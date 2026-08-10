@@ -2,28 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AddUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Laravel\Mcp\Request as McpRequest;
+
 
 class UserController extends Controller
 {
     //funcion para registrar un usuario
-    public function register(Request $request)
+    //store es el nonbre standar para registrar
+    public function store(AddUserRequest $request)
     {
-        //valida los datos que se ingresan
-        $validateData = $request->validate([
-            "name" => "required|string",
-            //unique:users : se hace una consulta a la bd para comprabar que ese correo no este registrado
-            "email" => "required|string|unique:users",
-            "password" => "required|string",
-            "role" => "required|string",
-
-        ]);
-
         try {
-
-            $user = User::create($validateData);
+            $user = User::create($request->validated());
             return Response()->json($user, 201);
         } catch (\Exception $e) {
             return response()->json(["message" => "error interno al intentar registrar un usuario"], 500);
@@ -56,7 +47,8 @@ class UserController extends Controller
     public function index()
     {
         try {
-            $users = User::all();
+            //muestra lista de usuarios, de 10 en 10
+            $users = User::paginate(10);
             return response()->json($users);
         } catch (\Exception $e) {
             return response()->json(["message" => "error interno al intentar obtener lista de usuarios"], 500);

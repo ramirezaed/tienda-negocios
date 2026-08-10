@@ -38,7 +38,7 @@ class ProductController extends Controller
     }
 
     //funcion buscar producto por id
-    public function getById(int $id)
+    public function show(int $id)
     {
         try {
             $product = Product::find($id);
