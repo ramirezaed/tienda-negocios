@@ -70,7 +70,7 @@ class ProductController extends Controller
     }
 
     //funcion para eliminar un producto
-    public function delete(int $id)
+    public function destroy(int $id)
     {
         try {
             //verifica que el producto exista

@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AddCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
-use Illuminate\Contracts\Support\ValidatedData;
-use Illuminate\Http\Request;
+
 
 class CategoryController extends Controller
 {
@@ -32,7 +31,7 @@ class CategoryController extends Controller
         }
     }
     //funcion para buscar categoria por id
-    public function getById(int $id)
+    public function show(int $id)
     {
         try {
             $category = Category::find($id);
@@ -62,7 +61,7 @@ class CategoryController extends Controller
         }
     }
 
-    public function delete(int $id)
+    public function destroy(int $id)
     {
         try {
             $category = Category::find($id);

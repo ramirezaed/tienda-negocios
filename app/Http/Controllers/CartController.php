@@ -70,7 +70,7 @@ class CartController extends Controller
     }
 
     //funcion para eliminar un carrito
-    public function deleteCart(ClearCartRequest $request): JsonResponse
+    public function destroy(ClearCartRequest $request): JsonResponse
     {
         $this->cartService->deleteCart($request->validated('user_id'));
         return response()->json(['message' => 'carrito eliminado con éxito'], 200);
