@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AddProductToCartRequest;
+use App\Http\Requests\ClearCartRequest;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
@@ -47,41 +48,15 @@ class CartController extends Controller
         );
 
         // si cumple con todo agrega el producto al carrito
-        return response()->json([
-            'message' => 'Producto agregado con éxito',
-            'data' => $cartItem
-        ], 200);
+        return response()->json([$cartItem], 200);
     }
 
 
     //funcion para vaciar el carrito
-    public function clear(Request $request)
+    public function clear(ClearCartRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'user_id' => 'required|integer|exists:users,id',
-        ]);
-        try {
-            $cart = Cart::where('user_id', $validated['user_id'])->with('items')->first();
-            // verifica que el carrito exista
-            if (!$cart) {
-                return response()->json(['message' => 'El usuario no tiene ningún carrito creado'], 404);
-            }
-            // devuevle el stock a cada producto 
-            foreach ($cart->items as $item) {
-                $product = Product::find($item->product_id);
-
-                if ($product) {
-                    // incrementael stock con la cantidad
-                    $product->increment('stock', $item->quantity);
-                }
-            }
-            // elimina todos los productos de la tabla 'cart_items'
-            CartItem::where('cart_id', $cart->id)->delete();
-            $cart->update(["total" => 0.00]);
-            return response()->json(['message' => 'el carrito se vacio correctamente '], 200);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'error innterno al intentar vaciar el carrito'], 500);
-        }
+        $this->cartService->clear($request->validated('user_id'));
+        return response()->json(['message' => 'el carrito se vació correctamente'], 200);
     }
 
 

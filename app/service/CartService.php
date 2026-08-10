@@ -71,6 +71,7 @@ class CartService
             return $cartItem;
         });
     }
+
     public function clear(int $userId): Cart
     {
         $cart = Cart::with('items')->where('user_id', $userId)->first();
