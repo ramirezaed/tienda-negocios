@@ -44,5 +44,5 @@ Route::prefix('cart')->group(function () {
     Route::post('/add', [CartController::class, 'addProduct']);    // Agregar  producto
     Route::post('/clear', [CartController::class, 'clear']);       // Vaciar carrito
     Route::post('/remove', [CartController::class, 'removeProduct']); // quitar un producto
-    Route::delete('/delete', [CartController::class, 'deleteCart']); // eliminar carrito
+    Route::delete('/', [CartController::class, 'deleteCart']); // eliminar carrito
 });
