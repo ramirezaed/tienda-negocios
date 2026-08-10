@@ -6,8 +6,6 @@ use App\Http\Requests\AddProductToCartRequest;
 use App\Http\Requests\ClearCartRequest;
 use App\Http\Requests\RemoveProductFromCartRequest;
 use App\Models\Cart;
-use App\Models\CartItem;
-use App\Models\Product;
 use App\service\CartService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
