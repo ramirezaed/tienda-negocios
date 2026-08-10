@@ -88,4 +88,32 @@ class CartController extends Controller
             return response()->json(['message' => 'error innterno al intentar vaciar el carrito'], 500);
         }
     }
+    public function removeProduct(Request $request)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+            'product_id' => 'required|integer|exists:products,id',
+        ]);
+        try {
+            // busca el carrito del usuario
+            $cart = Cart::where('user_id', $validated['user_id'])->first();
+            if (!$cart) {
+                return response()->json(['message' => 'carrito no encontrado'], 404);
+            }
+            // busca el producto en el carrito 
+            $cartItem = CartItem::where('cart_id', $cart->id)
+                ->where('product_id', $validated['product_id'])
+                ->first();
+            if (!$cartItem) {
+                return response()->json(['message' => 'producto no encontrado'], 404);
+            }
+            //Eliminar el registro de la tabla intermedia
+            $cartItem->delete();
+            //cuando se elimina el producto del carrtio se incrementa su stock 
+            $cartItem->decrement('stock', $validated['quantity']);
+            return response()->json(['message' => 'producto quitado con éxito'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'error interno al intentar quitar el producto del carrito'], 500);
+        }
+    }
 }
