@@ -22,4 +22,14 @@ class CategoryController extends Controller
             return response()->json(["message" => "error interno al intentar registrar una nueva categoria"], 500);
         }
     }
+    //funcion para mostrar todas las categorias registradas
+    public function index()
+    {
+        try {
+            $categories = Category::all();
+            return response()->json($categories, 200);
+        } catch (\Exception $e) {
+            return response()->json(["message" => "error interno al intentar mostrar las categorias"], 500);
+        }
+    }
 }
