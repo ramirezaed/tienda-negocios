@@ -1,0 +1,83 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Category;
+use Illuminate\Contracts\Support\ValidatedData;
+use Illuminate\Http\Request;
+
+class CategoryController extends Controller
+{
+    //funcion para registrar una nueva categoria
+    public function register(Request $request)
+    {
+        $validateDate = $request->validate([
+            //verifica que que el nombre sea string y que no este registrado en la bd
+            "name" => "required|string|unique:categories"
+        ]);
+        try {
+            $category = Category::create($validateDate);
+            return response()->json($category, 201);
+        } catch (\Exception $e) {
+            return response()->json(["message" => "error interno al intentar registrar una nueva categoria"], 500);
+        }
+    }
+    //funcion para mostrar todas las categorias registradas
+    public function index()
+    {
+        try {
+            $categories = Category::all();
+            return response()->json($categories, 200);
+        } catch (\Exception $e) {
+            return response()->json(["message" => "error interno al intentar mostrar las categorias"], 500);
+        }
+    }
+    //funcion para buscar categoria por id
+    public function getById(int $id)
+    {
+        try {
+            $category = Category::find($id);
+            //verifica que exista una categoria con ese id
+            if (!$category) {
+                return response()->json(["message" => "categoria no encontrada"], 404);
+            }
+            return response()->json($category);
+        } catch (\Exception $e) {
+            return response()->json(["message" => "error interno al intentar mostrar las categorias"], 500);
+        }
+    }
+
+    //funcion para modificar una categoria
+    public function update(Request $request, int $id)
+    {
+        $validateDate = $request->validate([
+            //sometimes : valida solo si viene en la peticion
+            "name" => "sometimes|required|unique:categories"
+        ]);
+        try {
+            $category = Category::find($id);
+            //verifica si la categoria existe
+            if (!$category) {
+                return response()->json(["message" => "categoria no encontrada"], 404);
+            }
+            $category->update($validateDate);
+            return response()->json($category);
+        } catch (\Exception $e) {
+            return response()->json(["message" => "error interno al intentar actualizar una categoria"], 500);
+        }
+    }
+
+    public function delete(int $id)
+    {
+        try {
+            $category = Category::find($id);
+            if (!$category) {
+                return response()->json(["message" => "categoria no encontrada"], 404);
+            }
+            $category->delete();
+            return response()->json(["message" => "categoria eliminada con exito"], 200);
+        } catch (\Exception $e) {
+            return response()->json(["message" => "error interno al intentar eliminar una categoria"], 500);
+        }
+    }
+}

@@ -20,6 +20,7 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
     // un producto puede estar en muchos o ningun cart_items
     public function cartItem()
     {
