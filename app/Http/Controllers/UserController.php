@@ -17,7 +17,7 @@ class UserController extends Controller
             //unique:users : se hace una consulta a la bd para comprabar que ese correo no este registrado
             "email" => "required|string|unique:users",
             "password" => "required|string",
-            "role" => "required|strign",
+            "role" => "required|string",
 
         ]);
 
