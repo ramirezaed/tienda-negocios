@@ -91,4 +91,17 @@ class ProductController extends Controller
             return response()->json(["message" => "error interno al intentar eliminar un producto"], 500);
         }
     }
+
+    //funcion para mostrar los productos con blade
+    public function catalog()
+    {
+        try {
+            // t raelos productos paginados de 10 en 10 e incluimos su categoría
+            $products = Product::with('category')->paginate(10);
+            // devulve la vista Blade de productos
+            return view('products.catalog', compact('products'));
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'No se pudo cargar el catálogo de productos.');
+        }
+    }
 }
