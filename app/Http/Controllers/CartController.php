@@ -71,4 +71,21 @@ class CartController extends Controller
             return response()->json(['message' => 'error interno al intentar agregar un producto al carrito'], 500);
         }
     }
+    //funcion para vaciar el carrito
+    public function clear(Request $request)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+        ]);
+        try {
+            $cart = Cart::where('user_id', $validated['user_id'])->first();
+            if ($cart) {
+                // elimina todos los productos del carrito
+                CartItem::where('cart_id', $cart->id)->delete();
+            }
+            return response()->json(['message' => 'se vacio correctamente'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'error innterno al intentar vaciar el carrito'], 500);
+        }
+    }
 }
