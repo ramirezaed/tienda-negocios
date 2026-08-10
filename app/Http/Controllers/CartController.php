@@ -78,16 +78,28 @@ class CartController extends Controller
             'user_id' => 'required|integer|exists:users,id',
         ]);
         try {
-            $cart = Cart::where('user_id', $validated['user_id'])->first();
-            if ($cart) {
-                // elimina todos los productos del carrito
-                CartItem::where('cart_id', $cart->id)->delete();
+            $cart = Cart::where('user_id', $validated['user_id'])->with('items')->first();
+            // verifica que el carrito exista
+            if (!$cart) {
+                return response()->json(['message' => 'El usuario no tiene ningún carrito creado'], 404);
             }
-            return response()->json(['message' => 'se vacio correctamente'], 200);
+            // devuevle el stock a cada producto 
+            foreach ($cart->items as $item) {
+                $product = Product::find($item->product_id);
+
+                if ($product) {
+                    // incrementael stock con la cantidad
+                    $product->increment('stock', $item->quantity);
+                }
+            }
+            // elimina todos los productos de la tabla 'cart_items'
+            CartItem::where('cart_id', $cart->id)->delete();
+            return response()->json(['message' => 'el carrito se vacio correctamente '], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'error innterno al intentar vaciar el carrito'], 500);
         }
     }
+
     public function removeProduct(Request $request)
     {
         $validated = $request->validate([
@@ -114,6 +126,41 @@ class CartController extends Controller
             return response()->json(['message' => 'producto quitado con éxito'], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'error interno al intentar quitar el producto del carrito'], 500);
+        }
+    }
+
+    //funcion para eliminar un carrito
+    public function deleteCart(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+        ]);
+
+        try {
+            //busca el carrito del usuario
+            $cart = Cart::where('user_id', $validated['user_id'])->with('items')->first();
+            //verifica si el carrito existe
+            if (!$cart) {
+                return response()->json(['message' => 'El usuario no tiene ningún carrito creado'], 404);
+            }
+            //devuelve stock de cada producto antes de borrarlos del carrito
+            foreach ($cart->items as $item) {
+                // busca producto  en la tabla de productos
+                $product = Product::find($item->product_id);
+
+                if ($product) {
+                    // incrementamos su stock con la cantidad que el usuario tenía reservada en su carrito
+                    $product->increment('stock', $item->quantity);
+                }
+            }
+
+            //elimina todos los productos 'cart_items'
+            CartItem::where('cart_id', $cart->id)->delete();
+            //elimina el carrito principal en la tabla 'cart'
+            $cart->delete();
+            return response()->json(['message' => 'carrito eliminado con exito'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'error interno al intentar eliminar el carrito'], 500);
         }
     }
 }
