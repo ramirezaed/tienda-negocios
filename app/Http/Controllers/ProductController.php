@@ -14,8 +14,8 @@ class ProductController extends Controller
         $validateDate = $request->validate([
             "name" => "required|string",
             "description" => "required|string",
-            "price" => "required|decimal(8,2)",
-            "stock" => "required|integer",
+            "price" => "required|decimal:1,2|gt:0",
+            "stock" => "required|integer|gt:0",
             "category_id" => "required|integer|exists:categories,id",
         ]);
         try {
@@ -56,8 +56,8 @@ class ProductController extends Controller
         $validateDate = $request->validate([
             "name" => "sometimes|required|string",
             "description" => "sometimes|required|string",
-            "price" => "sometimes|required|decimal(8,2)",
-            "stock" => "sometimes|required|integer",
+            "price" => "required|decimal:0,2|gt:0", //gt: 0 es para verificar que sea mayor que 0
+            "stock" => "required|integer|gt:0",
             "category_id" => "sometimes|required|integer|exists:categories,id"
         ]);
         try {
@@ -69,6 +69,21 @@ class ProductController extends Controller
             return response()->json($product, 200);
         } catch (\Exception $e) {
             return response()->json(["message" => "error interno al intentar actualizar un producto"], 500);
+        }
+    }
+    //funcion para eliminar un producto
+    public function delete(int $id)
+    {
+        try {
+            //verifica que el producto exista
+            $product = Product::find($id);
+            if (!$product) {
+                return response()->json(["message", "producto no encontrado"], 404);
+            }
+            $product->delete();
+            return response()->json(["message" => "producto eliminado con exito", 200]);
+        } catch (\Exception $e) {
+            return response()->json(["message" => "error interno al intentar eliminar un producto"], 500);
         }
     }
 }
