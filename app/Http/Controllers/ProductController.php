@@ -9,12 +9,12 @@ use PhpParser\Node\Stmt\TryCatch;
 class ProductController extends Controller
 {
     //funcion para registrar un nuevo producto
-    public function register(Request $request, int $id)
+    public function register(Request $request)
     {
         $validateDate = $request->validate([
             "name" => "required|string",
             "description" => "required|string",
-            "price" => "required|decimal:1,2|gt:0",
+            "price" => "required|decimal:0,2|gt:0",
             "stock" => "required|integer|gt:0",
             "category_id" => "required|integer|exists:categories,id",
         ]);
