@@ -25,7 +25,7 @@ class ProductController extends Controller
             return response()->json(["message" => "error interno al intentar registrar un nuevo producto"], 500);
         }
     }
-
+    //funcion para mostrar todos los productos
     public function index()
     {
         try {
@@ -35,16 +35,40 @@ class ProductController extends Controller
             return response()->json(["message" => "error interno al intentar obtener lista de productos"], 500);
         }
     }
+
+    //funcion buscar producto por id
     public function getById(int $id)
     {
         try {
             $product = Product::find($id);
+            //verifica que el producto exista
             if ($product) {
                 return response()->json(["message" => "producto no encontrado"], 404);
             }
             return response()->json($product, 200);
         } catch (\Exception $e) {
             return response()->json(["message" => "error interno al intentar obtener datos del producto"], 500);
+        }
+    }
+    //funcion para actualizar un producto
+    public function update(Request $request, int $id)
+    {
+        $validateDate = $request->validate([
+            "name" => "sometimes|required|string",
+            "description" => "sometimes|required|string",
+            "price" => "sometimes|required|decimal(8,2)",
+            "stock" => "sometimes|required|integer",
+            "category_id" => "sometimes|required|integer|exists:categories,id"
+        ]);
+        try {
+            $product = Product::find($id);
+            if (!$product) {
+                return response()->json(["message", "producto no encontrado"], 404);
+            }
+            $product->update($validateDate);
+            return response()->json($product, 200);
+        } catch (\Exception $e) {
+            return response()->json(["message" => "error interno al intentar actualizar un producto"], 500);
         }
     }
 }
