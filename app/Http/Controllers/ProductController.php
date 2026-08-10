@@ -61,8 +61,8 @@ class ProductController extends Controller
         $validateData = $request->validate([
             "name" => "sometimes|required|string",
             "description" => "sometimes|required|string",
-            "price" => "required|decimal:0,2|gt:0", //gt: 0 es para verificar que sea mayor que 0
-            "stock" => "required|integer|gt:0",
+            "price" => "sometimes|required|decimal:0,2|gt:0", //gt: 0 es para verificar que sea mayor que 0
+            "stock" => "sometimes|required|integer|gt:0",
             "category_id" => "sometimes|required|integer|exists:categories,id"
         ]);
         try {
