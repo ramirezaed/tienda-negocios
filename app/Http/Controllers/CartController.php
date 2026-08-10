@@ -6,8 +6,6 @@ use App\Http\Requests\AddProductToCartRequest;
 use App\Http\Requests\ClearCartRequest;
 use App\Http\Requests\RemoveProductFromCartRequest;
 use App\Models\Cart;
-use App\Models\CartItem;
-use App\Models\Product;
 use App\service\CartService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -72,7 +70,7 @@ class CartController extends Controller
     }
 
     //funcion para eliminar un carrito
-    public function deleteCart(ClearCartRequest $request): JsonResponse
+    public function destroy(ClearCartRequest $request): JsonResponse
     {
         $this->cartService->deleteCart($request->validated('user_id'));
         return response()->json(['message' => 'carrito eliminado con éxito'], 200);
