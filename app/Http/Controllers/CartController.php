@@ -61,10 +61,9 @@ class CartController extends Controller
     }
 
 
-
+    //funcion para quitar un producto del carrito
     public function removeProduct(RemoveProductFromCartRequest $request): JsonResponse
     {
-
         $this->cartService->removeProduct(
             $request->validated('user_id'),
             $request->validated('product_id'),
@@ -73,37 +72,9 @@ class CartController extends Controller
     }
 
     //funcion para eliminar un carrito
-    public function deleteCart(Request $request): JsonResponse
+    public function deleteCart(ClearCartRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'user_id' => 'required|integer|exists:users,id',
-        ]);
-
-        try {
-            //busca el carrito del usuario
-            $cart = Cart::where('user_id', $validated['user_id'])->with('items')->first();
-            //verifica si el carrito existe
-            if (!$cart) {
-                return response()->json(['message' => 'El usuario no tiene ningún carrito creado'], 404);
-            }
-            //devuelve stock de cada producto antes de borrarlos del carrito
-            foreach ($cart->items as $item) {
-                // busca producto  en la tabla de productos
-                $product = Product::find($item->product_id);
-
-                if ($product) {
-                    // incrementamos su stock con la cantidad que el usuario tenía reservada en su carrito
-                    $product->increment('stock', $item->quantity);
-                }
-            }
-
-            //elimina todos los productos 'cart_items'
-            CartItem::where('cart_id', $cart->id)->delete();
-            //elimina el carrito principal en la tabla 'cart'
-            $cart->delete();
-            return response()->json(['message' => 'carrito eliminado con exito'], 200);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'error interno al intentar eliminar el carrito'], 500);
-        }
+        $this->cartService->deleteCart($request->validated('user_id'));
+        return response()->json(['message' => 'carrito eliminado con éxito'], 200);
     }
 }

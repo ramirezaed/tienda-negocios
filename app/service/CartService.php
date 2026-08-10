@@ -117,4 +117,21 @@ class CartService
 
         return $cart;
     }
+
+    //servicio par eliminar un carrito
+    public function deleteCart(int $userId): void
+
+    {
+        //busca el carrito del usuario
+        $cart = Cart::with('items')->where('user_id', $userId)->first();
+        if (!$cart) {
+            throw new CartNotFoundException();
+        }
+        //devuleve el stock de todos los item que tenia el carrito
+        $this->restoreStockForItems($cart->items);
+        //elimina los items del carrito
+        $cart->items()->delete();
+        //elimina el carrito
+        $cart->delete();
+    }
 }
