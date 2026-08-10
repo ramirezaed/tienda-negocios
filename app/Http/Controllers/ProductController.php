@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AddProductRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use PhpParser\Node\Stmt\TryCatch;
@@ -9,20 +10,14 @@ use PhpParser\Node\Stmt\TryCatch;
 class ProductController extends Controller
 {
     //funcion para registrar un nuevo producto
-    public function register(Request $request)
+    //store es el nombre estandar cuando se quiere registrar
+    public function store(AddProductRequest $request)
     {
-        $validateData = $request->validate([
-            "name" => "required|string",
-            "description" => "required|string",
-            "price" => "required|decimal:0,2|gt:0",
-            "stock" => "required|integer|gt:0",
-            "category_id" => "required|integer|exists:categories,id",
-        ]);
         try {
-            $producto = Product::create($validateData);
+            //trae los datos validados del form request
+            $producto = Product::create($request->validated());
             return response()->json($producto, 201);
         } catch (\Exception $e) {
-            //     return response()->json(["message" => "error interno al intentar registrar un nuevo producto"], 500);
             return response()->json([
                 "message" => $e->getMessage(),
                 "file" => $e->getFile(),
@@ -30,6 +25,7 @@ class ProductController extends Controller
             ], 500);
         }
     }
+
     //funcion para mostrar todos los productos
     public function index()
     {
