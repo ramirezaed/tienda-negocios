@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AddCategoryRequest;
+use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
 use Illuminate\Contracts\Support\ValidatedData;
 use Illuminate\Http\Request;
@@ -46,19 +47,15 @@ class CategoryController extends Controller
     }
 
     //funcion para modificar una categoria
-    public function update(Request $request, int $id)
-    {
-        $validateDate = $request->validate([
-            //sometimes : valida solo si viene en la peticion
-            "name" => "sometimes|required|unique:categories"
-        ]);
+    public function update(UpdateCategoryRequest $request, int $id)
+    {;
         try {
             $category = Category::find($id);
             //verifica si la categoria existe
             if (!$category) {
                 return response()->json(["message" => "categoria no encontrada"], 404);
             }
-            $category->update($validateDate);
+            $category->update($request->validated());
             return response()->json($category);
         } catch (\Exception $e) {
             return response()->json(["message" => "error interno al intentar actualizar una categoria"], 500);

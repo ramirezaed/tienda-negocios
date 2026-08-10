@@ -23,7 +23,15 @@ class UpdateCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "name" => "sometimes|required|unique:categories"
+        ];
+    }
+    public function messages(): array
+    {
+        return [
+            // Mensajes para el campo "name"
+            'name.required' => 'El nombre no puede estar vacío si se envía en la petición.',
+            'name.string' => 'El nombre debe ser una cadena de texto válida.',
         ];
     }
 }
