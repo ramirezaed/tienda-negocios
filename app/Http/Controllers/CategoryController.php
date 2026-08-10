@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AddCategoryRequest;
 use App\Models\Category;
 use Illuminate\Contracts\Support\ValidatedData;
 use Illuminate\Http\Request;
@@ -9,14 +10,10 @@ use Illuminate\Http\Request;
 class CategoryController extends Controller
 {
     //funcion para registrar una nueva categoria
-    public function register(Request $request)
+    public function store(AddCategoryRequest $request)
     {
-        $validateDate = $request->validate([
-            //verifica que que el nombre sea string y que no este registrado en la bd
-            "name" => "required|string|unique:categories"
-        ]);
         try {
-            $category = Category::create($validateDate);
+            $category = Category::create($request->validated());
             return response()->json($category, 201);
         } catch (\Exception $e) {
             return response()->json(["message" => "error interno al intentar registrar una nueva categoria"], 500);
@@ -26,7 +23,8 @@ class CategoryController extends Controller
     public function index()
     {
         try {
-            $categories = Category::all();
+            //devuelve todas las categorias, paginadas de 10 en 10
+            $categories = Category::paginate(10);
             return response()->json($categories, 200);
         } catch (\Exception $e) {
             return response()->json(["message" => "error interno al intentar mostrar las categorias"], 500);

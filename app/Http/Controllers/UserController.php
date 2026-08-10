@@ -10,6 +10,18 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    //funcion para mostrsr todos los usuarios
+    public function index()
+    {
+        try {
+            //muestra lista de usuarios, de 10 en 10
+            $users = User::paginate(10);
+            return response()->json($users);
+        } catch (\Exception $e) {
+            return response()->json(["message" => "error interno al intentar obtener lista de usuarios"], 500);
+        }
+    }
+
     //funcion para registrar un usuario
     //store es el nonbre standar para registrar
     public function store(AddUserRequest $request)
@@ -39,19 +51,9 @@ class UserController extends Controller
             return response()->json(["message" => "error interno al intentar actualizar un usuario"], 500);
         }
     }
-    //funcion para mostrsr todos los usuarios
-    public function index()
-    {
-        try {
-            //muestra lista de usuarios, de 10 en 10
-            $users = User::paginate(10);
-            return response()->json($users);
-        } catch (\Exception $e) {
-            return response()->json(["message" => "error interno al intentar obtener lista de usuarios"], 500);
-        }
-    }
+
     //funcion para elimiar un usuario
-    public function delete(int $id)
+    public function destroy(int $id)
     {
         try {
             $user = User::find($id);
@@ -66,7 +68,7 @@ class UserController extends Controller
     }
 
     //funcion para obtener un los datos de un usuario
-    public function getById(int $id)
+    public function show(int $id)
     {
         try {
             $user = User::find($id);
