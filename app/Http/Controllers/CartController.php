@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\InsufficientStockException;
 use App\Http\Requests\AddProductToCartRequest;
 use App\Models\Cart;
 use App\Models\CartItem;
