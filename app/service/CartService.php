@@ -2,6 +2,7 @@
 
 namespace App\service;
 
+use App\Exceptions\CartItemNotFoundException;
 use App\Exceptions\CartNotFoundException;
 use App\Exceptions\InsufficientStockException;
 use App\Models\Cart;
@@ -84,6 +85,35 @@ class CartService
 
         $cart->items()->delete();
         $cart->update(['total' => 0.00]);
+
+        return $cart;
+    }
+
+    //funcion para quitar un prodcuto del carrito
+    public function removeProduct(int $userId, int $productId): Cart
+    {
+        $cart = Cart::where('user_id', $userId)->first();
+        if (!$cart) {
+            throw new CartNotFoundException();
+        }
+
+        $cartItem = CartItem::where('cart_id', $cart->id)
+            ->where('product_id', $productId)
+            ->first();
+
+        if (!$cartItem) {
+            throw new CartItemNotFoundException();
+        }
+
+        // devolvemos el stock ANTES de borrar el item, usando su propia cantidad
+        $product = Product::find($cartItem->product_id);
+        if ($product) {
+            $product->increment('stock', $cartItem->quantity);
+        }
+        //elimina el producto
+        $cartItem->delete();
+        //actualiza el total y subtotal
+        $cart->update(['total' => $cart->items()->sum('sub_total')]);
 
         return $cart;
     }

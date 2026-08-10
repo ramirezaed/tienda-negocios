@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AddProductToCartRequest;
 use App\Http\Requests\ClearCartRequest;
+use App\Http\Requests\RemoveProductFromCartRequest;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
@@ -56,43 +57,19 @@ class CartController extends Controller
     public function clear(ClearCartRequest $request): JsonResponse
     {
         $this->cartService->clear($request->validated('user_id'));
-        return response()->json(['message' => 'el carrito se vació correctamente'], 200);
+        return response()->json(['message' => 'el carrito se vacio correctamente'], 200);
     }
 
 
-    public function removeProduct(Request $request)
+
+    public function removeProduct(RemoveProductFromCartRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'user_id' => 'required|integer|exists:users,id',
-            'product_id' => 'required|integer|exists:products,id',
-        ]);
-        try {
-            // busca el carrito del usuario
-            $cart = Cart::where('user_id', $validated['user_id'])->first();
-            if (!$cart) {
-                return response()->json(['message' => 'carrito no encontrado'], 404);
-            }
-            // busca el producto en el carrito 
-            $cartItem = CartItem::where('cart_id', $cart->id)
-                ->where('product_id', $validated['product_id'])
-                ->first();
-            if (!$cartItem) {
-                return response()->json(['message' => 'producto no encontrado'], 404);
-            }
-            //elimina el item
-            $cartItem->delete();
-            ///Suma los subtotales de los productos que queden
-            $newTotal = CartItem::where('cart_id', $cart->id)->sum('sub_total');
 
-            $cart->update(['total' => $newTotal]);
-
-            //cuando se elimina el producto del carrtio se incrementa su stock 
-            $cartItem->decrement('stock', $validated['quantity']);
-
-            return response()->json(['message' => 'producto quitado con éxito'], 200);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'error interno al intentar quitar el producto del carrito'], 500);
-        }
+        $this->cartService->removeProduct(
+            $request->validated('user_id'),
+            $request->validated('product_id'),
+        );
+        return response()->json(['message' => 'producto quitado con éxito'], 200);
     }
 
     //funcion para eliminar un carrito
