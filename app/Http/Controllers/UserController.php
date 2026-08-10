@@ -18,8 +18,6 @@ class UserController extends Controller
             "email" => "required|string|unique:users",
             "password" => "required|string",
             "role" => "required|strign",
-            //valida que se ingrese una categoria y que exista
-            "category_id" => "required|integer|exists:categories,id",
 
         ]);
 
@@ -39,9 +37,6 @@ class UserController extends Controller
             "name" => "sometimes|required|string",
             "password" => "sometimes|required|string",
             "role" => "sometimes|required|string",
-            "role" => "required|strign",
-            //valida que se ingrese una categoria y que exista
-            "category_id" => "required|integer|exists:categories,id",
         ]);
         try {
             //busca el id en para ver si el usuario existe o no
