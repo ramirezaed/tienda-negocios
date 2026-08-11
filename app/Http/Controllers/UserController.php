@@ -15,39 +15,27 @@ class UserController extends Controller
     //funcion para mostrsr todos los usuarios
     public function index()
     {
-        try {
-            //muestra lista de usuarios, de 10 en 10
-            $users = User::paginate(10);
-            return response()->json($users);
-        } catch (\Exception $e) {
-            return response()->json(["message" => "error interno al intentar obtener lista de usuarios"], 500);
-        }
+        //muestra lista de usuarios, de 10 en 10
+        $users = User::paginate(10);
+        return response()->json($users);
     }
 
     //funcion para registrar un usuario
     //store es el nonbre standar para registrar
     public function store(AddUserRequest $request)
     {
-        try {
-            $user = User::create($request->validated());
-            return Response()->json($user, 201);
-        } catch (\Exception $e) {
-            return response()->json(["message" => "error interno al intentar registrar un usuario"], 500);
-        }
+        $user = User::create($request->validated());
+        return Response()->json($user, 201);
     }
 
     //funcion  para modificar un usuario
     public function update(UpdateUserRequest $request, int $id)
     {
-        try {
-            //llama al servicio findbyid
-            $user = $this->userService->findById($id);
-            //si el usuario existe valida los datos, actualiza el registro
-            $user->update($request->validated());
-            return response()->json($user, 200);
-        } catch (\Exception $e) {
-            return response()->json(["message" => "error interno al intentar actualizar un usuario"], 500);
-        }
+        //llama al servicio findbyid
+        $user = $this->userService->findById($id);
+        //si el usuario existe valida los datos, actualiza el registro
+        $user->update($request->validated());
+        return response()->json($user, 200);
     }
 
     //funcion para elimiar un usuario
