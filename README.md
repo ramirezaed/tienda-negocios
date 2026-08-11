@@ -232,3 +232,43 @@ Petición HTTP
 ```
 
 La separación de responsabilidades permite que los **modelos se encarguen de los datos**, los **controladores gestionen las peticiones y la lógica de la aplicación**, y las **vistas o respuestas JSON presenten la información al cliente**.
+
+## Endpoints de la API
+
+La API está organizada en cuatro grupos principales de rutas, todas bajo el prefijo /api. A continuación se detallan los endpoints disponibles:
+
+### Usuarios (/api/users)
+
+Método Endpoint Controlador Función Descripción
+GET /api/users UserController@index Listar usuarios Obtiene todos los usuarios registrados
+POST /api/users/register UserController@store Registrar usuario Crea un nuevo usuario en el sistema
+GET /api/users/{id} UserController@show Ver usuario Obtiene los datos de un usuario específico
+PUT /api/users/{id} UserController@update Actualizar usuario Modifica los datos de un usuario existente
+DELETE /api/users/{id} UserController@destroy Eliminar usuario Elimina un usuario del sistema
+
+### Categorías (/api/categories)
+
+Método Endpoint Controlador Función Descripción
+GET /api/categories CategoryController@index Listar categorías Obtiene todas las categorías disponibles
+POST /api/categories CategoryController@store Crear categoría Registra una nueva categoría
+GET /api/categories/{id} CategoryController@show Ver categoría Obtiene los datos de una categoría específica
+PUT /api/categories/{id} CategoryController@update Actualizar categoría Modifica los datos de una categoría existente
+DELETE /api/categories/{id} CategoryController@destroy Eliminar categoría Elimina una categoría del sistema
+
+### Productos (/api/products)
+
+Método Endpoint Controlador Función Descripción
+GET /api/products ProductController@index Listar productos Obtiene todos los productos disponibles
+POST /api/products ProductController@store Crear producto Registra un nuevo producto
+GET /api/products/{id} ProductController@show Ver producto Obtiene los datos de un producto específico
+PUT /api/products/{id} ProductController@update Actualizar producto Modifica los datos de un producto existente
+DELETE /api/products/{id} ProductController@destroy Eliminar producto Elimina un producto del sistema
+
+### Carrito (/api/cart)
+
+Método Endpoint Controlador Función Descripción
+GET /api/cart CartController@index Ver carrito Muestra el contenido actual del carrito
+POST /api/cart/add CartController@addProduct Agregar producto Añade un producto al carrito
+POST /api/cart/remove CartController@removeProduct Quitar producto Elimina un producto específico del carrito
+POST /api/cart/clear CartController@clear Vaciar carrito Elimina todos los productos del carrito
+DELETE /api/cart CartController@destroy Eliminar carrito Elimina completamente el carrito
