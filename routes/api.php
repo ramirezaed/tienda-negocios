@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 // todas estas rutas va a estar en http://127.0.0.1:8000/api/users/....
 Route::prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'index']);          // lista de usuarios
-    Route::post('/register', [UserController::class, 'store']); // registrar uno nuevo
+    Route::post('/', [UserController::class, 'store']); // registrar uno nuevo
     Route::get('/{id}', [UserController::class, 'show']);    // buscar por ID
     Route::put('/{id}', [UserController::class, 'update']);     // modificar por ID
     Route::delete('/{id}', [UserController::class, 'destroy']);  // eliminar por ID

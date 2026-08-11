@@ -241,7 +241,7 @@ La API está organizada en cuatro grupos principales de rutas, todas bajo el pre
 
 Método Endpoint Controlador Función Descripción
 GET /api/users UserController@index Listar usuarios Obtiene todos los usuarios registrados
-POST /api/users/register UserController@store Registrar usuario Crea un nuevo usuario en el sistema
+POST /api/users/ UserController@store Registrar usuario Crea un nuevo usuario en el sistema
 GET /api/users/{id} UserController@show Ver usuario Obtiene los datos de un usuario específico
 PUT /api/users/{id} UserController@update Actualizar usuario Modifica los datos de un usuario existente
 DELETE /api/users/{id} UserController@destroy Eliminar usuario Elimina un usuario del sistema
