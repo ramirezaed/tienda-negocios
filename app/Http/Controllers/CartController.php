@@ -17,22 +17,18 @@ class CartController extends Controller
 
     public function index(Request $request)
     {
-        try {
-            //input se utiliza para recuper datos que el cliente envia a travez de una peticion http
-            $userId = $request->input('user_id');
-            // muestra el carrito con los datos selecionado
-            $cart = Cart::where('user_id', $userId)
-                ->with(['items.product' => function ($query) {
-                    $query->select('id', 'name', 'description', 'price', 'category_id');
-                }])->first();
+        //input se utiliza para recuper datos que el cliente envia a travez de una peticion http
+        $userId = $request->input('user_id');
+        // muestra el carrito con los datos selecionado
+        $cart = Cart::where('user_id', $userId)
+            ->with(['items.product' => function ($query) {
+                $query->select('id', 'name', 'description', 'price', 'category_id');
+            }])->first();
 
-            if (!$cart) {
-                return response()->json(['message' => 'el carrito esta vacio', 'items' => []], 200);
-            }
-            return response()->json($cart, 200);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Error al obtener el carrito'], 500);
+        if (!$cart) {
+            return response()->json(['message' => 'el carrito esta vacio', 'items' => []], 200);
         }
+        return response()->json($cart, 200);
     }
 
     //funcion para agregar producto al carrito
