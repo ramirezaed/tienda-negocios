@@ -5,9 +5,15 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AddProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
+use App\service\ProductService;
 
 class ProductController extends Controller
 {
+
+    //inyecta el servicio producto en el constructor
+    //el constructor se ejecuta automaticamente
+
+    public function __construct(private ProductService $productService) {}
     //funcion para registrar un nuevo producto
     //store es el nombre estandar cuando se quiere registrar
     public function store(AddProductRequest $request)
@@ -41,11 +47,8 @@ class ProductController extends Controller
     public function show(int $id)
     {
         try {
-            $product = Product::find($id);
+            $product = $this->productService->findById($id);
             //verifica que el producto exista
-            if (!$product) {
-                return response()->json(["message" => "producto no encontrado"], 404);
-            }
             return response()->json($product, 200);
         } catch (\Exception $e) {
             return response()->json(["message" => "error interno al intentar obtener datos del producto"], 500);
@@ -57,10 +60,7 @@ class ProductController extends Controller
     {
         //agregar un servico para buscar por id, y llamarlo desde aca
         try {
-            $product = Product::find($id);
-            if (!$product) {
-                return response()->json(["message", "producto no encontrado"], 404);
-            }
+            $product = $this->productService->findById($id);
             //trae los datos validados del form request
             $product->update($request->validated());
             return response()->json($product, 200);
@@ -74,10 +74,7 @@ class ProductController extends Controller
     {
         try {
             //verifica que el producto exista
-            $product = Product::find($id);
-            if (!$product) {
-                return response()->json(["message", "producto no encontrado"], 404);
-            }
+            $product = $this->productService->findById($id);
             $product->delete();
             return response()->json(["message" => "producto eliminado con exito", 200]);
         } catch (\Exception $e) {
