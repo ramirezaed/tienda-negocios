@@ -15,7 +15,7 @@ class CartController extends Controller
     //constructor se ejecuta automaticamente cuando se llama al controlador
     public function __construct(private CartService $cartService) {}
 
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         //input se utiliza para recuper datos que el cliente envia a travez de una peticion http
         $userId = $request->input('user_id');

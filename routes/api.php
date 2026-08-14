@@ -4,7 +4,6 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // rutas de usuario
@@ -24,9 +23,9 @@ Route::prefix('users')->group(function () {
 Route::prefix('categories')->group(function () {
     Route::get('/', [CategoryController::class, 'index']);          // lista de categorias
     Route::post('/', [CategoryController::class, 'store']); // registrar categoria
-    Route::get('/{id}', [CategoryController::class, 'show']);    // buscar por ID
-    Route::put('/{id}', [CategoryController::class, 'update']);     // modificar por ID
-    Route::delete('/{id}', [CategoryController::class, 'destroy']);  // eliminar por ID
+    Route::get('/{category}', [CategoryController::class, 'show']);    // buscar por ID
+    Route::put('/{category}', [CategoryController::class, 'update']);     // modificar por ID
+    Route::delete('/{category}', [CategoryController::class, 'destroy']);  // eliminar por ID
 });
 
 // rutas productos
