@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Api\V1; // <-- Tiene que ser idéntico a las carpetas en mayúscula
 
 
-use App\Http\Controllers\CartController;
+
 use App\Http\Controllers\api\V1\CategoryController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\UserController;
+
 use Illuminate\Support\Facades\Route;
 
 // rutas de usuario
@@ -33,6 +32,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('V1')->group(function () {
     Route::apiResource('categories', CategoryController::class);
+    Route::apiResource('user', UserController::class);
 });
 
 // rutas productos

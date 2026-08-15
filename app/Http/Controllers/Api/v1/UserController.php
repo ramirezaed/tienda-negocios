@@ -1,20 +1,19 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\AddUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
-use App\service\UserService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-
     //funcion para mostrsr todos los usuarios
     public function index(): JsonResponse
     {
-        //muestra lista de usuarios, de 10 en 10
         $users = User::paginate(10);
         return response()->json($users);
     }
