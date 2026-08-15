@@ -17,10 +17,10 @@ Route::prefix('V1')->group(function () {
 
 
 // // rutas cart
-// Route::prefix('cart')->group(function () {
-//     Route::get('/', [CartController::class, 'index']);             // ver el carrito
-//     Route::post('/add', [CartController::class, 'addProduct']);    // Agregar  producto
-//     Route::post('/clear', [CartController::class, 'clear']);       // Vaciar carrito
-//     Route::post('/remove', [CartController::class, 'removeProduct']); // quitar un producto
-//     Route::delete('/', [CartController::class, 'destroy']); // eliminar carrito
-// });
+Route::prefix('V1')->group(function () {
+    Route::get('/cart/', [CartController::class, 'index']);             // ver el carrito
+    Route::post('/cart/add', [CartController::class, 'addProduct']);    // Agregar  producto
+    Route::post('/cart/clear', [CartController::class, 'clear']);       // Vaciar carrito
+    Route::post('/cart/remove', [CartController::class, 'removeProduct']); // quitar un producto
+    Route::delete('/cart/', [CartController::class, 'destroy']); // eliminar carrito
+});
