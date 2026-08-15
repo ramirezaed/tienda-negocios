@@ -3,48 +3,48 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AddProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class PorductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    //store es el nombre estandar cuando se quiere registrar
+    public function store(AddProductRequest $request): JsonResponse
     {
-        //
+        //trae los datos validados del form request
+        $producto = Product::create($request->validated());
+        return response()->json($producto, 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    //funcion para mostrar todos los productos
+    public function index(): JsonResponse
     {
-        //
+        //muestra la lista productos paginados, de 10 en 10
+        $product = Product::paginate(10);
+        return response()->json($product, 200);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Product $product)
+    //funcion buscar producto por id
+    public function show(Product $product): JsonResponse
     {
-        //
+        //verifica que el producto exista
+        return response()->json($product, 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Product $product)
+    //funcion para actualizar un producto
+    public function update(UpdateProductRequest $request, Product $product): JsonResponse
     {
-        //
+        //trae los datos validados del form request
+        $product->update($request->validated());
+        return response()->json($product, 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Product $product)
+    //funcion para eliminar un producto
+    public function destroy(Product $product): JsonResponse
     {
-        //
+        $product->delete();
+        return response()->json(["message" => "producto eliminado con exito", 200]);
     }
 }
