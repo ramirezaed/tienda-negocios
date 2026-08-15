@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__ . '/../routes/web.php',
@@ -44,5 +45,20 @@ return Application::configure(basePath: dirname(__DIR__))
                 "status" => 422,
                 "error" => (object)[]
             ], 422);
+        });
+
+
+
+        $exceptions->render(function (\Throwable $exception, Request $request) {
+            if (!$request->is("api/*")) {
+                return null;
+            }
+            //guardar log
+
+            return response()->json([
+                "message" => "Error interno del servidor",
+                "status" => 500,
+                "error" => (object)[]
+            ], 500);
         });
     })->create();
