@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddProductRequest;
+use App\Http\Requests\ProductIndexFormRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
@@ -19,10 +20,21 @@ class PorductController extends Controller
     }
 
     //funcion para mostrar todos los productos
-    public function index(): JsonResponse
+    public function index(ProductIndexFormRequest $request): JsonResponse
     {
-        //muestra la lista productos paginados, de 10 en 10
-        $product = Product::paginate(10);
+        //se crea la consulta en el modelo product -> select *from product
+        $product = Product::query()
+            //cuando el parametro search no es nulo, se ejecuta la funcion
+            ->when($request->query("search"), function ($query, $search) {
+                //agrega la condicion where a la consulta, usa el valor search
+                $query->where(function ($query) use ($search) {
+                    $query->where("name", $search)
+                        //cuando el nombre de relacion categoria es igual a search
+                        ->orWhereRelation("category", "name", $search);
+                });
+                //si no hay parametro de busqueda devuelve todo paginados
+            })->paginate(10);
+
         return response()->json($product, 200);
     }
 

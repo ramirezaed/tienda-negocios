@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Http\Requests\UserIndexFormRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 
@@ -12,9 +13,22 @@ use Illuminate\Http\JsonResponse;
 class UserController extends Controller
 {
     //funcion para mostrsr todos los usuarios
-    public function index(): JsonResponse
+    public function index(UserIndexFormRequest $request): JsonResponse
     {
-        $users = User::paginate(10);
+
+        //crea la consulta en el modelo user -> "select * from user"
+        $users = User::query()
+            //search es el parametro que se busca
+            //cuando existe search se ejecuta la funcion
+            ->when($request->query('search'), function ($query, $search) {
+                //agega condicion where a la consulta, usa el valor search
+                $query->where(function ($query) use ($search) {
+                    //se busca usuario cunado el nombre = search o email =search
+                    $query->where("name", $search)->orWhere("email", $search);
+                });
+                //si search es nulo, devuelve la lista de usuarios paginado de a 10
+            })->paginate(10);
+
         return response()->json($users);
     }
 
