@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string("name")->unique(); //el nombre de la categoria debe ser unico
             $table->timestamps();
+            $table->softDeletes(); // campo para eliminacion logica
         });
     }
 

@@ -22,6 +22,8 @@ return new class extends Migration
             $table->timestamps();
             //dentro de un carrito el un cart_id o producto_id solo puede aparecer una vez
             $table->unique(['cart_id', 'product_id']);
+            $table->decimal('price', 10, 2);
+            $table->decimal('sub_total', 10, 2);
         });
     }
 

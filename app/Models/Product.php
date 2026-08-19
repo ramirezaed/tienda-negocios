@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
+    //se usa para eliminacion logica
+    use SoftDeletes;
+
     //define que tabla usa este modelo
     protected $table = "products";
     protected $fillable = [
@@ -15,6 +19,8 @@ class Product extends Model
         "stock",
         "category_id",
     ];
+
+
 
     //un producto pertenece a una categoria
     public function category()
