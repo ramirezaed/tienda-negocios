@@ -21,6 +21,7 @@ return new class extends Migration
             //muchos productos pertenecen a una categoria
             $table->foreignId("category_id")->constrained("categories");
             $table->timestamps();
+            $table->softDeletes(); // campo para eliminacion logica
         });
     }
 

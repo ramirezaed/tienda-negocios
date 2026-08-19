@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             //agrega relacion para conocer a que ususario pertenece el carrito
             $table->foreignId("user_id")->unique()->constrained("users");
+            $table->decimal('total', 10, 2)->default(0.00);
             $table->timestamps();
         });
     }
