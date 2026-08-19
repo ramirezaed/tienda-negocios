@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -9,6 +10,7 @@ class Category extends Model
 {
     //se usa para eliminacion logica
     use SoftDeletes;
+    use HasFactory;
     //dfine el nombre de la tabla que usara este modelo
     protected $table = "Categories";
     //define los campos para insercion masiva
