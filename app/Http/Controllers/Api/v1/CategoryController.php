@@ -6,16 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AddCategoryRequest;
 use App\Http\Requests\CategoryIndexFormRequest;
 use App\Http\Requests\UpdateCategoryRequest;
+use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\JsonResponse;
-
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(CategoryIndexFormRequest $request): JsonResponse
+    public function index(CategoryIndexFormRequest $request): AnonymousResourceCollection
     {
         //crea la consulta en el modelo -> select *from category
         $categories = Category::query()
@@ -27,33 +28,33 @@ class CategoryController extends Controller
                     $query->where("name", "like", "%{$search}%");
                 });
             })->paginate(10);
-        return response()->json($categories, 200);
+        return CategoryResource::collection($categories);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(AddCategoryRequest $request): JsonResponse
+    public function store(AddCategoryRequest $request): AnonymousResourceCollection
     {
         $category = Category::create($request->validated());
-        return response()->json($category, 201);
+        return CategoryResource::collection($category);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Category $category): JsonResponse
+    public function show(Category $category): AnonymousResourceCollection
     {
-        return response()->json($category);
+        return CategoryResource::collection($category);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCategoryRequest $request, Category $category): JsonResponse
+    public function update(UpdateCategoryRequest $request, Category $category): AnonymousResourceCollection
     {
         $category->update($request->validated());
-        return response()->json($category);
+        return CategoryResource::collection($category);
     }
 
     /**
