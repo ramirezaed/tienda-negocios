@@ -4,20 +4,29 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddCategoryRequest;
+use App\Http\Requests\CategoryIndexFormRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\JsonResponse;
-
+use Psy\Command\WhereamiCommand;
 
 class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResponse
+    public function index(CategoryIndexFormRequest $request): JsonResponse
     {
-        //devuelve todas las categorias, paginadas de 10 en 10
-        $categories = Category::paginate(10);
+        //crea la consulta en el modelo -> select *from category
+        $categories = Category::query()
+            //si no es nullel parametro search, se ejecuta la funcion
+            ->when($request->query("search"), function ($query, $seachr) {
+                //agrega la condicion where a la consulta
+                $query->where(function ($query) use ($seachr) {
+                    //busca la categoria con el nombre
+                    $query->where("name", $seachr);
+                });
+            })->paginate(10);
         return response()->json($categories, 200);
     }
 
