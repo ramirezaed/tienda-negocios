@@ -24,7 +24,7 @@ class UserController extends Controller
                 //agega condicion where a la consulta, usa el valor search
                 $query->where(function ($query) use ($search) {
                     //se busca usuario cunado el nombre = search o email =search
-                    $query->where("name", $search)->orWhere("email", $search);
+                    $query->where("name", "like", "%{$search}%")->orWhere("email",  "like", "%{$search}%");
                 });
                 //si search es nulo, devuelve la lista de usuarios paginado de a 10
             })->paginate(10);

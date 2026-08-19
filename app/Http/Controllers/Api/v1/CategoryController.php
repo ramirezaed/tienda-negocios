@@ -20,11 +20,11 @@ class CategoryController extends Controller
         //crea la consulta en el modelo -> select *from category
         $categories = Category::query()
             //si no es nullel parametro search, se ejecuta la funcion
-            ->when($request->query("search"), function ($query, $seachr) {
+            ->when($request->query("search"), function ($query, $search) {
                 //agrega la condicion where a la consulta
-                $query->where(function ($query) use ($seachr) {
+                $query->where(function ($query) use ($search) {
                     //busca la categoria con el nombre
-                    $query->where("name", $seachr);
+                    $query->where("name", "like", "%{$search}%");
                 });
             })->paginate(10);
         return response()->json($categories, 200);
