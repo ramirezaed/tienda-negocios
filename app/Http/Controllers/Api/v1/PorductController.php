@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AddProductRequest;
 use App\Http\Requests\ProductIndexFormRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class PorductController extends Controller
 {
@@ -20,7 +22,7 @@ class PorductController extends Controller
     }
 
     //funcion para mostrar todos los productos
-    public function index(ProductIndexFormRequest $request): JsonResponse
+    public function index(ProductIndexFormRequest $request): AnonymousResourceCollection
     {
         //se crea la consulta en el modelo product -> select *from product
         $product = Product::query()
@@ -37,7 +39,10 @@ class PorductController extends Controller
                 });
                 //si no hay parametro de busqueda devuelve todo paginados
             })->paginate(10);
-        return response()->json($product, 200);
+
+
+        // return response()->json($product, 200);
+        return ProductResource::collection($product);
     }
 
     //funcion buscar producto por id
