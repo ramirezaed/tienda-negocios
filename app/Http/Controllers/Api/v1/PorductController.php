@@ -14,11 +14,11 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 class PorductController extends Controller
 {
     //store es el nombre estandar cuando se quiere registrar
-    public function store(AddProductRequest $request): JsonResponse
+    public function store(AddProductRequest $request): AnonymousResourceCollection
     {
         //trae los datos validados del form request
-        $producto = Product::create($request->validated());
-        return response()->json($producto, 201);
+        $product = Product::create($request->validated());
+        return ProductResource::collection($product);
     }
 
     //funcion para mostrar todos los productos
@@ -46,18 +46,18 @@ class PorductController extends Controller
     }
 
     //funcion buscar producto por id
-    public function show(Product $product): JsonResponse
+    public function show(Product $product): AnonymousResourceCollection
     {
         //verifica que el producto exista
-        return response()->json($product, 200);
+        return ProductResource::collection($product);
     }
 
     //funcion para actualizar un producto
-    public function update(UpdateProductRequest $request, Product $product): JsonResponse
+    public function update(UpdateProductRequest $request, Product $product): AnonymousResourceCollection
     {
         //trae los datos validados del form request
         $product->update($request->validated());
-        return response()->json($product, 200);
+        return ProductResource::collection($product);
     }
 
     //funcion para eliminar un producto

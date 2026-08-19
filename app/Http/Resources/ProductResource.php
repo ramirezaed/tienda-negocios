@@ -20,7 +20,8 @@ class ProductResource extends JsonResource
             "description" => $this->descriptions,
             "price" => (float)$this->price,
             "stock" => $this->stock,
-            "disponible" => $this->stock > 0,
+            "disponible" => $this->stock > 0, // devulve true
+            "actualizado" => $this->updated_at->format("d/m/Y")
         ];
     }
 }
