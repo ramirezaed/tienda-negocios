@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserIndexFormRequest extends FormRequest
+class ProductIndexFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,14 +23,13 @@ class UserIndexFormRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'search' => "nullable | string"
+            //
+            "search" => "nullable | string"
         ];
     }
-
     public function messages(): array
     {
         return  [
-
             'search.string' => 'El parametro de busqueda debe ser una cadena de texto válida.',
         ];
     }
