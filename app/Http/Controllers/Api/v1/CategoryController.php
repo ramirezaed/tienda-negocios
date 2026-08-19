@@ -8,7 +8,7 @@ use App\Http\Requests\CategoryIndexFormRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\JsonResponse;
-use Psy\Command\WhereamiCommand;
+
 
 class CategoryController extends Controller
 {

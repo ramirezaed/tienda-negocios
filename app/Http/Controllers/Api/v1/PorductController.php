@@ -28,6 +28,7 @@ class PorductController extends Controller
             ->when($request->query("search"), function ($query, $search) {
                 //agrega la condicion where a la consulta, usa el valor search
                 $query->where(function ($query) use ($search) {
+                    //cuando el nombre del prodcuto sea igual que el buscado
                     $query->where("name", $search)
                         //cuando el nombre de relacion categoria es igual a search
                         ->orWhereRelation("category", "name", $search);
