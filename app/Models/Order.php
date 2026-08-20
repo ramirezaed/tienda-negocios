@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-    //
+    //    //dfine el nombre de la tabla que usara este modelo
+    protected $table = "orders";
+
     protected $fillable = [
         "user_id",
         "sub_total",
