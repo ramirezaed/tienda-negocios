@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddProductRequest;
-use App\Http\Requests\ProductIndexFormRequest;
+use App\Http\Requests\FilterSearchFormRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
@@ -22,7 +22,7 @@ class PorductController extends Controller
     }
 
     //funcion para mostrar todos los productos
-    public function index(ProductIndexFormRequest $request): AnonymousResourceCollection
+    public function index(FilterSearchFormRequest $request): AnonymousResourceCollection
     {
         //se crea la consulta en el modelo product -> select *from product
         $product = Product::query()

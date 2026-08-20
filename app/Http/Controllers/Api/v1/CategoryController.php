@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddCategoryRequest;
 use App\Http\Requests\CategoryIndexFormRequest;
+use App\Http\Requests\FilterSearchFormRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
@@ -16,7 +17,7 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(CategoryIndexFormRequest $request): AnonymousResourceCollection
+    public function index(FilterSearchFormRequest $request): AnonymousResourceCollection
     {
         //crea la consulta en el modelo -> select *from category
         $categories = Category::query()

@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddUserRequest;
+use App\Http\Requests\FilterSearchFormRequest;
 use App\Http\Requests\UpdateUserRequest;
-use App\Http\Requests\UserIndexFormRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -14,7 +14,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 class UserController extends Controller
 {
     //funcion para mostrsr todos los usuarios
-    public function index(UserIndexFormRequest $request): AnonymousResourceCollection
+    public function index(FilterSearchFormRequest $request): AnonymousResourceCollection
     {
         //crea la consulta en el modelo user -> "select * from user"
         $users = User::query()
