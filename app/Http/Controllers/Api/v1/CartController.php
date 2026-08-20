@@ -35,7 +35,7 @@ class CartController extends Controller
     //funcion para agregar producto al carrito
     public function addProduct(AddProductToCartRequest $request)
     {
-        //  ejecutas la logica de negocio
+        //ejecuta la logica de negocio
         //si falla algo lanza las exepciones que estan en el servicio
         $cartItem = $this->cartService->addProduct(
             $request->validated('user_id'),

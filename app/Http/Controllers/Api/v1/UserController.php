@@ -4,18 +4,18 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddUserRequest;
+use App\Http\Requests\FilterSearchFormRequest;
 use App\Http\Requests\UpdateUserRequest;
-use App\Http\Requests\UserIndexFormRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class UserController extends Controller
 {
     //funcion para mostrsr todos los usuarios
-    public function index(UserIndexFormRequest $request): JsonResponse
+    public function index(FilterSearchFormRequest $request): AnonymousResourceCollection
     {
-
         //crea la consulta en el modelo user -> "select * from user"
         $users = User::query()
             //search es el parametro que se busca
@@ -24,34 +24,34 @@ class UserController extends Controller
                 //agega condicion where a la consulta, usa el valor search
                 $query->where(function ($query) use ($search) {
                     //se busca usuario cunado el nombre = search o email =search
-                    $query->where("name", $search)->orWhere("email", $search);
+                    $query->where("name", "like", "%{$search}%")->orWhere("email",  "like", "%{$search}%");
                 });
                 //si search es nulo, devuelve la lista de usuarios paginado de a 10
             })->paginate(10);
 
-        return response()->json($users);
+        return UserResource::collection($users);
     }
 
     //funcion para registrar un usuario
     //store es el nonbre standar para registrar
-    public function store(AddUserRequest $request): JsonResponse
+    public function store(AddUserRequest $request): AnonymousResourceCollection
     {
         $user = User::create($request->validated());
-        return Response()->json($user, 201);
+        return UserResource::collection($user);
     }
 
     //funcion para obtener un los datos de un usuario
-    public function show(User $user): JsonResponse
+    public function show(User $user): AnonymousResourceCollection
     {
-        return response()->json($user);
+        return UserResource::collection($user);
     }
 
     //funcion  para modificar un usuario
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(UpdateUserRequest $request, User $user): AnonymousResourceCollection
     {
         //si el usuario existe valida los datos, actualiza el registro
         $user->update($request->validated());
-        return response()->json($user, 200);
+        return UserResource::collection($user);
     }
 
     //funcion para elimiar un usuario
