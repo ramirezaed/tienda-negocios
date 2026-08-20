@@ -5,6 +5,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
@@ -35,6 +36,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 "error" => (object)[]
             ], 404);
         });
+
         //maneja erroees 422, validaciones de datos
         $exceptions->render(function (ValidationException $exception, Request $request) {
             if (!$request->is('api/*')) {
@@ -47,6 +49,19 @@ return Application::configure(basePath: dirname(__DIR__))
             ], 422);
         });
 
+        //manejo de errores 400, badrequest
+        $exceptions->render(function (BadRequestHttpException $exception, Request $request) {
+            if (!$request->is('api/*')) {
+                return null;
+            }
+
+            return response()->json([
+                "message" => $exception->getMessage(),
+                "status" => 400,
+                "error" => (object)[]
+            ], 400);
+        });
+        //manejo de errores 500, error interno del servidor
         $exceptions->render(function (\Throwable $exception, Request $request) {
             if (!$request->is("api/*")) {
                 return null;
