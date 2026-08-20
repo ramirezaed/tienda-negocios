@@ -76,11 +76,9 @@ class CartService
     public function clear(int $userId): Cart
     {
         $cart = Cart::with('items')->where('user_id', $userId)->first();
-
         if (!$cart) {
             throw new CartNotFoundException();
         }
-
         $this->restoreStockForItems($cart->items);
 
         $cart->items()->delete();
