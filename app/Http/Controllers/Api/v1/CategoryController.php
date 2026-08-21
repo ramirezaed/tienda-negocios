@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\DTO\Categories\CategoryDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddCategoryRequest;
-use App\Http\Requests\CategoryIndexFormRequest;
-use App\Http\Requests\FilterSearchFormRequest;
+use App\Http\Requests\search\FilterSearchFormRequest;
 use App\Http\Requests\UpdateCategoryRequest;
-use App\Http\Resources\CategoryResource;
+use App\Http\Resources\category\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -35,27 +35,29 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(AddCategoryRequest $request): AnonymousResourceCollection
+    public function store(AddCategoryRequest $request): JsonResponse
     {
-        $category = Category::create($request->validated());
-        return CategoryResource::collection($category);
+        //extrae los datos validadso del formrequest y los asigna a data
+        $data = $request->validated();
+        $categoryDTO = CategoryDTO::fromArray($data);
+        $category = Category::create($categoryDTO->toArray());
+        return response()->json(new CategoryResource($category), 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Category $category): AnonymousResourceCollection
+    public function show(Category $category): JsonResponse
     {
-        return CategoryResource::collection($category);
+        return response()->json(new CategoryResource($category), 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateCategoryRequest $request, Category $category): AnonymousResourceCollection
+    public function update(UpdateCategoryRequest $request, Category $category): JsonResponse
     {
-        $category->update($request->validated());
-        return CategoryResource::collection($category);
+        //extrae los datos validados y lso guarda en data
+        $data = $request->validated();
+        //convierte los datos
+        $categoriaDTO = CategoryDTO::fromArray($data);
+        //actualiza usando los datos del dto
+        $category->update($categoriaDTO->toArray());
+        return response()->json(new CategoryResource($category), 200);
     }
 
     /**

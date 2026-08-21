@@ -43,7 +43,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 return null;
             }
             return response()->json([
-                "message" => "datos no validos",
+                "message" => $exception->getMessage(),
                 "status" => 422,
                 "error" => (object)[]
             ], 422);
@@ -61,7 +61,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 "error" => (object)[]
             ], 400);
         });
-        //manejo de errores 500, error interno del servidor
+        // //manejo de errores 500, error interno del servidor
         $exceptions->render(function (\Throwable $exception, Request $request) {
             if (!$request->is("api/*")) {
                 return null;
@@ -69,7 +69,8 @@ return Application::configure(basePath: dirname(__DIR__))
             //guardar log
 
             return response()->json([
-                "message" => "Error interno del servidor",
+                // "message" => "Error interno del servidor",
+                "message" => $exception->getMessage(),
                 "status" => 500,
                 "error" => (object)[]
             ], 500);

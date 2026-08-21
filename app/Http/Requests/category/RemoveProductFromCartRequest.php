@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\cart;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Override;
 
-class AddProductRequest extends FormRequest
+class RemoveProductFromCartRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,11 +23,8 @@ class AddProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name" => "required|string",
-            "description" => "required|string",
-            "price" => "required|decimal:0,2|gt:0",
-            "stock" => "required|integer|gt:0",
-            "category_id" => "required|integer|exists:categories,id",
+            'user_id' => 'required|integer|exists:users,id',
+            'product_id' => 'required|integer|exists:products,id',
         ];
     }
 }

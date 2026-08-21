@@ -2,23 +2,30 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\DTO\Products\ProductDTO;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\AddProductRequest;
-use App\Http\Requests\FilterSearchFormRequest;
-use App\Http\Requests\UpdateProductRequest;
-use App\Http\Resources\ProductResource;
+use App\Http\Requests\product\AddProductRequest;
+use App\Http\Requests\product\UpdateProductRequest;
+use App\Http\Requests\search\FilterSearchFormRequest;
+use App\Http\Resources\product\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
+
 class PorductController extends Controller
 {
     //store es el nombre estandar cuando se quiere registrar
-    public function store(AddProductRequest $request): AnonymousResourceCollection
+    public function store(AddProductRequest $request): JsonResponse
     {
-        //trae los datos validados del form request
-        $product = Product::create($request->validated());
-        return ProductResource::collection($product);
+        // Extraemos los datos ya validados
+        $data = $request->validated();
+        // Instanciamos el DTO pasando
+        $productDTO = ProductDTO::fromArray($data);
+        //crea el nuevo producto usando los datos que vienen del dto
+        $product = Product::create($productDTO->toArray());
+        //
+        return response()->json(new ProductResource($product), 200);
     }
 
     //funcion para mostrar todos los productos
@@ -46,18 +53,18 @@ class PorductController extends Controller
     }
 
     //funcion buscar producto por id
-    public function show(Product $product): AnonymousResourceCollection
+    public function show(Product $product): JsonResponse
     {
         //verifica que el producto exista
-        return ProductResource::collection($product);
+        return response()->json(new ProductResource($product), 201);
     }
 
     //funcion para actualizar un producto
-    public function update(UpdateProductRequest $request, Product $product): AnonymousResourceCollection
+    public function update(UpdateProductRequest $request, Product $product): JsonResponse
     {
         //trae los datos validados del form request
         $product->update($request->validated());
-        return ProductResource::collection($product);
+        return response()->json(new ProductResource($product), 200);
     }
 
     //funcion para eliminar un producto
