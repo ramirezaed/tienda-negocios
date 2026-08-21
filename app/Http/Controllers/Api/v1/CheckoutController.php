@@ -4,13 +4,9 @@ namespace App\Http\Controllers\api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SummaryFormRequest;
-use App\Http\Resources\SummaryResource;
-use App\Models\Order;
 use App\Services\CheckoutService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\View\AnonymousComponent;
-use ReturnTypeWillChange;
+
 
 class CheckoutController extends Controller
 {

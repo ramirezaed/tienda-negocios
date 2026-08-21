@@ -14,8 +14,6 @@ Route::prefix('V1')->group(function () {
     Route::apiResource("products", PorductController::class);
 });
 
-
-
 // // rutas cart
 Route::prefix('V1')->group(function () {
     Route::get('/cart/', [CartController::class, 'index']);             // ver el carrito

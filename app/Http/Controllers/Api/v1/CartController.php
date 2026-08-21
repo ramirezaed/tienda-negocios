@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\AddProductToCartRequest;
-use App\Http\Requests\ClearCartRequest;
-use App\Http\Requests\RemoveProductFromCartRequest;
+use App\Http\Requests\cart\AddProductToCartRequest;
+use App\Http\Requests\cart\ClearCartRequest;
+use App\Http\Requests\cart\RemoveProductFromCartRequest;
 use App\Models\Cart;
 use App\service\CartService;
 use Illuminate\Http\JsonResponse;
