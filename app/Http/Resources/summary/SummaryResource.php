@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\summary;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CategoryResource extends JsonResource
+class SummaryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,8 +16,10 @@ class CategoryResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "name" => $this->name,
-            "actualizado" => $this->updated_at->format("d/m/Y"),
+            "sub total" => $this->sub_total,
+            " impuesto" => $this->tax,
+            "costo de envio" => $this->shipping_cost,
+            "total" => $this->totol
         ];
     }
 }
