@@ -235,40 +235,72 @@ La separación de responsabilidades permite que los **modelos se encarguen de lo
 
 ## Endpoints de la API
 
-La API está organizada en cuatro grupos principales de rutas, todas bajo el prefijo /api. A continuación se detallan los endpoints disponibles:
+La API está organizada en seis grupos principales de rutas, todas bajo el prefijo /api/V1. A continuación se detallan los endpoints disponibles:
 
-### Usuarios (/api/users)
+## Usuarios (/api/V1/users)
 
-Método Endpoint Controlador Función Descripción
+### Método Endpoint Controlador Función Descripción
+
 GET /api/V1/users UserController@index Listar usuarios Obtiene todos los usuarios registrados
-POST /api/V1/users/ UserController@store Registrar usuario Crea un nuevo usuario en el sistema
+
+POST /api/V1/users UserController@store Registrar usuario Crea un nuevo usuario en el sistema
+
 GET /api/V1/users/{id} UserController@show Ver usuario Obtiene los datos de un usuario específico
+
 PUT /api/V1/users/{id} UserController@update Actualizar usuario Modifica los datos de un usuario existente
+
 DELETE /api/V1/users/{id} UserController@destroy Eliminar usuario Elimina un usuario del sistema
 
-### Categorías (/api/categories)
+## Categorías (/api/V1/categories)
 
-Método Endpoint Controlador Función Descripción
+### Método Endpoint Controlador Función Descripción
+
 GET /api/V1/categories CategoryController@index Listar categorías Obtiene todas las categorías disponibles
+
 POST /api/V1/categories CategoryController@store Crear categoría Registra una nueva categoría
+
 GET /api/V1/categories/{id} CategoryController@show Ver categoría Obtiene los datos de una categoría específica
+
 PUT /api/V1/categories/{id} CategoryController@update Actualizar categoría Modifica los datos de una categoría existente
+
 DELETE /api/V1/categories/{id} CategoryController@destroy Eliminar categoría Elimina una categoría del sistema
 
-### Productos (/api/products)
+## Productos (/api/V1/products)
 
-Método Endpoint Controlador Función Descripción
+### Método Endpoint Controlador Función Descripción
+
 GET /api/V1/products ProductController@index Listar productos Obtiene todos los productos disponibles
+
 POST /api/V1/products ProductController@store Crear producto Registra un nuevo producto
+
 GET /api/V1/products/{id} ProductController@show Ver producto Obtiene los datos de un producto específico
+
 PUT /api/V1/products/{id} ProductController@update Actualizar producto Modifica los datos de un producto existente
+
 DELETE /api/V1/products/{id} ProductController@destroy Eliminar producto Elimina un producto del sistema
 
-### Carrito (/api/cart)
+## Carrito (/api/V1/cart)
 
-Método Endpoint Controlador Función Descripción
+### Método Endpoint Controlador Función Descripción
+
 GET /api/V1/cart CartController@index Ver carrito Muestra el contenido actual del carrito
+
 POST /api/V1/cart/add CartController@addProduct Agregar producto Añade un producto al carrito
+
 POST /api/V1/cart/remove CartController@removeProduct Quitar producto Elimina un producto específico del carrito
+
 POST /api/V1/cart/clear CartController@clear Vaciar carrito Elimina todos los productos del carrito
+
 DELETE /api/V1/cart CartController@destroy Eliminar carrito Elimina completamente el carrito
+
+## Resumen (/api/V1/summary)
+
+### Método Endpoint Controlador Función Descripción
+
+GET /api/V1/summary CheckoutController@summary Obtener resumen Obtiene el resumen del carrito, incluyendo subtotal, impuestos, costo de envío y total
+
+## Checkout (/api/V1/checkout)
+
+### Método Endpoint Controlador Función Descripción
+
+POST /api/V1/checkout CheckoutController@checkout Procesar checkout Procesa la compra y genera la orden correspondiente
