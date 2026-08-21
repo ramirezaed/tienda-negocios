@@ -1,24 +1,30 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1; // <-- Tiene que ser idéntico a las carpetas en mayúscula
-
-
-
-use App\Http\Controllers\api\V1\CategoryController;
+use App\Http\Controllers\Api\V1\CategoryController;
+use App\Http\Controllers\Api\V1\UserController;
+use App\Http\Controllers\Api\V1\ProductController;
+use App\Http\Controllers\Api\V1\CartController;
+use App\Http\Controllers\Api\V1\CheckoutController;
 
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('V1')->group(function () {
+
+    // Resources
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('users', UserController::class);
-    Route::apiResource("products", PorductController::class);
-});
+    Route::apiResource('products', ProductController::class);
 
-// // rutas cart
-Route::prefix('V1')->group(function () {
-    Route::get('/cart/', [CartController::class, 'index']);             // ver el carrito
-    Route::post('/cart/add', [CartController::class, 'addProduct']);    // Agregar  producto
-    Route::post('/cart/clear', [CartController::class, 'clear']);       // Vaciar carrito
-    Route::post('/cart/remove', [CartController::class, 'removeProduct']); // quitar un producto
-    Route::delete('/cart/', [CartController::class, 'destroy']); // eliminar carrito
+    // Cart
+    Route::get('cart', [CartController::class, 'index']);
+    Route::post('cart/add', [CartController::class, 'addProduct']);
+    Route::post('cart/clear', [CartController::class, 'clear']);
+    Route::post('cart/remove', [CartController::class, 'removeProduct']);
+    Route::delete('cart', [CartController::class, 'destroy']);
+
+    // Summary
+    Route::get('/summary', [CheckoutController::class, 'summary']);
+
+    // Checkout
+    Route::post('/checkout', [CheckoutController::class, 'checkout']);
 });

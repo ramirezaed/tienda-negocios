@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Http\Controllers\Api\V1;
 
 use App\DTO\Products\ProductDTO;
@@ -13,7 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 
-class PorductController extends Controller
+class ProductController extends Controller
 {
     //store es el nombre estandar cuando se quiere registrar
     public function store(AddProductRequest $request): JsonResponse

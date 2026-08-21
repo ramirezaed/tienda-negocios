@@ -11,6 +11,7 @@ class Order extends Model
 
     protected $fillable = [
         "user_id",
+        "shipping_address",
         "sub_total",
         "tax", // impuesto
         "shipping_cost", //costo de envio
