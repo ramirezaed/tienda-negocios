@@ -61,7 +61,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 "error" => (object)[]
             ], 400);
         });
-        // //manejo de errores 500, error interno del servidor
+        // // //manejo de errores 500, error interno del servidor
         $exceptions->render(function (\Throwable $exception, Request $request) {
             if (!$request->is("api/*")) {
                 return null;
