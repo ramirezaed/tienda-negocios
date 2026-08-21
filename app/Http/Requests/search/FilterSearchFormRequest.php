@@ -27,4 +27,12 @@ class FilterSearchFormRequest extends FormRequest
             "search" => "sometimes | required | string"
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'search.required' => 'El término de búsqueda es obligatorio.',
+            'search.string' => 'El término de búsqueda debe ser texto.',
+        ];
+    }
 }

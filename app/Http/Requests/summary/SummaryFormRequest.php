@@ -27,4 +27,14 @@ class SummaryFormRequest extends FormRequest
             "user_id" => "required|integer|exists:users,id"
         ];
     }
+
+
+    public function messages(): array
+    {
+        return [
+            'user_id.required' => 'El usuario es obligatorio.',
+            'user_id.integer' => 'El usuario debe ser un número entero.',
+            'user_id.exists' => 'El usuario no existe.',
+        ];
+    }
 }

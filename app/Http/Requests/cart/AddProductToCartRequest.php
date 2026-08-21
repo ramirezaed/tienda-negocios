@@ -31,4 +31,22 @@ class AddProductToCartRequest extends FormRequest
             'quantity' => 'required|integer|min:1',
         ];
     }
+
+
+    public function messages(): array
+    {
+        return [
+            'user_id.required' => 'El usuario es obligatorio.',
+            'user_id.integer' => 'El usuario debe ser un número entero.',
+            'user_id.exists' => 'El usuario no existe.',
+
+            'product_id.required' => 'El producto es obligatorio.',
+            'product_id.integer' => 'El producto debe ser un número entero.',
+            'product_id.exists' => 'El producto no existe.',
+
+            'quantity.required' => 'La cantidad es obligatoria.',
+            'quantity.integer' => 'La cantidad debe ser un número entero.',
+            'quantity.min' => 'La cantidad debe ser como mínimo 1.',
+        ];
+    }
 }
