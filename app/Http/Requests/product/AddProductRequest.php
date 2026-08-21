@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\product;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Override;
 
-class FilterSearchFormRequest extends FormRequest
+class AddProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,8 +24,11 @@ class FilterSearchFormRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
-            "search" => "sometimes | required | string"
+            "name" => "required|string",
+            "description" => "required|string",
+            "price" => "required|decimal:0,2|gt:0",
+            "stock" => "required|integer|gt:0",
+            "category_id" => "required|integer|exists:categories,id",
         ];
     }
 }

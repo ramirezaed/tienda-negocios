@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\DTO\Categories\CategoryDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddCategoryRequest;
-use App\Http\Requests\FilterSearchFormRequest;
+use App\Http\Requests\search\FilterSearchFormRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Resources\category\CategoryResource;
 use App\Models\Category;

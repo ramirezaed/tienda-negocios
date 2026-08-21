@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\DTO\Products\ProductDTO;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\AddProductRequest;
-use App\Http\Requests\FilterSearchFormRequest;
-use App\Http\Requests\UpdateProductRequest;
+use App\Http\Requests\product\AddProductRequest;
+use App\Http\Requests\product\UpdateProductRequest;
+use App\Http\Requests\search\FilterSearchFormRequest;
 use App\Http\Resources\product\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
@@ -22,7 +22,7 @@ class PorductController extends Controller
         $data = $request->validated();
         // Instanciamos el DTO pasando
         $productDTO = ProductDTO::fromArray($data);
-        //
+        //crea el nuevo producto usando los datos que vienen del dto
         $product = Product::create($productDTO->toArray());
         //
         return response()->json(new ProductResource($product), 200);
@@ -64,7 +64,7 @@ class PorductController extends Controller
     {
         //trae los datos validados del form request
         $product->update($request->validated());
-        return response()->json(new ProductResource($product), 201);
+        return response()->json(new ProductResource($product), 200);
     }
 
     //funcion para eliminar un producto
