@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\DTO\Categories\CategoryDTO;
+use App\DTO\Categories\CreateCategoryDTO;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\AddCategoryRequest;
+use App\Http\Requests\category\AddCategoryRequest;
+use App\Http\Requests\category\UpdateCategoryRequest;
 use App\Http\Requests\search\FilterSearchFormRequest;
-use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Resources\category\CategoryResource;
 use App\Models\Category;
+use App\service\category\CategoryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -17,6 +18,9 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    public function __construct(private CategoryService $categoryService) {}
+
     public function index(FilterSearchFormRequest $request): AnonymousResourceCollection
     {
         //crea la consulta en el modelo -> select *from category
@@ -37,10 +41,8 @@ class CategoryController extends Controller
      */
     public function store(AddCategoryRequest $request): JsonResponse
     {
-        //extrae los datos validadso del formrequest y los asigna a data
-        $data = $request->validated();
-        $categoryDTO = CategoryDTO::fromArray($data);
-        $category = Category::create($categoryDTO->toArray());
+
+        $category = $this->categoryService->create($request->toDTO());
         return response()->json(new CategoryResource($category), 201);
     }
 
@@ -54,7 +56,7 @@ class CategoryController extends Controller
         //extrae los datos validados y lso guarda en data
         $data = $request->validated();
         //convierte los datos
-        $categoriaDTO = CategoryDTO::fromArray($data);
+        $categoriaDTO = CreateCategoryDTO::fromArray($data);
         //actualiza usando los datos del dto
         $category->update($categoriaDTO->toArray());
         return response()->json(new CategoryResource($category), 200);

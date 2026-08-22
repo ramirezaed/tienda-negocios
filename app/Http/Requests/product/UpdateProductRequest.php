@@ -68,6 +68,7 @@ class UpdateProductRequest extends FormRequest
         return new UpdateProductDTO(
             name: $validated['name'] ?? null,
             description: $validated['description'] ?? null,
+            //array list solo se usa con datos float o int
             price: array_key_exists('price', $validated)
                 ? (float) $validated['price']
                 : null,

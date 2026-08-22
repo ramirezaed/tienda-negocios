@@ -2,7 +2,7 @@
 
 namespace App\DTO\Categories;
 
-class CategoryDTO
+class CreateCategoryDTO
 {
     /**
      * Create a new class instance.
