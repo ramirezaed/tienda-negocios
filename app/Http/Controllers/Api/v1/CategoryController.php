@@ -53,12 +53,8 @@ class CategoryController extends Controller
 
     public function update(UpdateCategoryRequest $request, Category $category): JsonResponse
     {
-        //extrae los datos validados y lso guarda en data
-        $data = $request->validated();
-        //convierte los datos
-        $categoriaDTO = CreateCategoryDTO::fromArray($data);
-        //actualiza usando los datos del dto
-        $category->update($categoriaDTO->toArray());
+
+        $category = $this->categoryService->update($request->toDTO(), $category);
         return response()->json(new CategoryResource($category), 200);
     }
 
