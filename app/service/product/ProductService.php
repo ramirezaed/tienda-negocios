@@ -1,6 +1,6 @@
 <?php
 
-namespace App\service\producto;
+namespace App\service\product;
 
 use App\DTO\Products\CreateProductDTO;
 use App\DTO\Products\UpdateProductDTO;
@@ -23,6 +23,6 @@ class ProductService
         //actualiza el producto
         $product->update($data->toArray());
         //devuelve el producto actualizado
-        return $product
+        return $product;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\product;
 
+use App\DTO\Products\CreateProductDTO;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Override;
@@ -54,5 +55,15 @@ class AddProductRequest extends FormRequest
             'category_id.integer' => 'La categoría debe ser un número entero.',
             'category_id.exists' => 'La categoría no existe.',
         ];
+    }
+    public function toDTO(): CreateProductDTO
+    {
+        return new CreateProductDTO(
+            name: $this->input('name'),
+            description: $this->input('description'),
+            price: (float) $this->input('price'),
+            stock: (int) $this->input('stock'),
+            category_id: (int) $this->input('category_id'),
+        );
     }
 }
