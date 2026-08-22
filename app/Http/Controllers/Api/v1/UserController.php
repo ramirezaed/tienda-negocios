@@ -46,16 +46,16 @@ class UserController extends Controller
     }
 
     //funcion para obtener un los datos de un usuario
-    public function show(User $user): JsonResponse
+    public function show(User $user): UserResource
     {
-        return Response()->json(new UserResource($user), 200);
+        return new UserResource($user);
     }
 
     //funcion  para modificar un usuario
     public function update(UpdateUserRequest $request, User $user): JsonResponse
     {
         //si el usuario existe valida los datos, actualiza el registro
-        $user->update($request->validated());
+        $user = $this->userService->update($user, $request->toDTO());
         return Response()->json(new UserResource($user), 200);
     }
 
