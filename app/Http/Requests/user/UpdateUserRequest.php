@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\user;
 
+use App\DTO\User\UpdateUserDTO;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -25,7 +26,7 @@ class UpdateUserRequest extends FormRequest
         return [
             //sometimes : valida solo si viene en la peticion
             "name" => "sometimes|required|string",
-            "password" => "sometimes|required|string",
+            "email" => "sometimes|required|string",
             "role" => "sometimes|required|string",
         ];
     }
@@ -44,5 +45,17 @@ class UpdateUserRequest extends FormRequest
             'role.required' => 'El rol de usuario no puede estar vacío si se envía en la petición.',
             'role.string' => 'El rol debe ser una cadena de texto válida.',
         ];
+    }
+
+    public function toDTO(): UpdateUserDTO
+    {
+        $validated = $this->validated();
+
+        return new UpdateUserDTO(
+            name: $validated['name'] ?? null,
+            email: $validated['email'] ?? null,
+            role: $validated['role'] ?? null,
+            providedFields: array_keys($validated),
+        );
     }
 }

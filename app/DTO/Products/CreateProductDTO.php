@@ -2,17 +2,17 @@
 
 namespace App\DTO\Products;
 
-class ProductDTO
+class CreateProductDTO
 {
     /**
      * Create a new class instance.
      */
     public function __construct(
-        public readonly ?string $name,
+        public readonly string $name,
         public readonly ?string $description,
-        public readonly ?float $price,
-        public readonly ?int $stock,
-        public readonly ?int $category_id
+        public readonly float $price,
+        public readonly int $stock,
+        public readonly int $category_id
     ) {}
 
     public function toArray(): array

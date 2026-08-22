@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\category;
 
+use App\DTO\Categories\UpdateCategoryDTO;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -33,5 +34,13 @@ class UpdateCategoryRequest extends FormRequest
             'name.required' => 'El nombre no puede estar vacío si se envía en la petición.',
             'name.string' => 'El nombre debe ser una cadena de texto válida.',
         ];
+    }
+    public function toDTO(): UpdateCategoryDTO
+    {
+        $validated = $this->validated();
+        return new UpdateCategoryDTO(
+            name: $validated['name'] ?? null,
+            providedFields: array_keys($validated),
+        );
     }
 }

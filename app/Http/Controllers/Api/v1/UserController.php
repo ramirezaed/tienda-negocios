@@ -2,20 +2,22 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\DTO\User\UserDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\user\AddUserRequest;
 use App\Http\Requests\search\FilterSearchFormRequest;
 use App\Http\Requests\user\UpdateUserRequest;
-use App\Http\Resources\product\ProductResource;
 use App\Http\Resources\user\UserResource;
 use App\Models\User;
+use App\service\user\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Laravel\Mcp\Response;
+
 
 class UserController extends Controller
 {
+
+    public function __construct(private UserService $userService) {}
+
     //funcion para mostrsr todos los usuarios
     public function index(FilterSearchFormRequest $request): AnonymousResourceCollection
     {
@@ -39,26 +41,21 @@ class UserController extends Controller
     //store es el nonbre standar para registrar
     public function store(AddUserRequest $request): JsonResponse
     {
-        //extrae los datos validados y los pasa a data
-        $data = $request->validated();
-        //transforma los datos
-        $userDTO = UserDTO::fromArray($data);
-        //crea el usuario con los datos que vienen del dto
-        $user = User::create($userDTO->toArray());
+        $user = $this->userService->create($request->toDTO());
         return response()->json(new UserResource($user), 201);
     }
 
     //funcion para obtener un los datos de un usuario
-    public function show(User $user): JsonResponse
+    public function show(User $user): UserResource
     {
-        return Response()->json(new UserResource($user), 200);
+        return new UserResource($user);
     }
 
     //funcion  para modificar un usuario
     public function update(UpdateUserRequest $request, User $user): JsonResponse
     {
         //si el usuario existe valida los datos, actualiza el registro
-        $user->update($request->validated());
+        $user = $this->userService->update($user, $request->toDTO());
         return Response()->json(new UserResource($user), 200);
     }
 

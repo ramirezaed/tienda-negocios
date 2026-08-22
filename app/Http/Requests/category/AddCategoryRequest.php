@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\category;
 
+use App\DTO\Categories\CreateCategoryDTO;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Override;
+
 
 class AddCategoryRequest extends FormRequest
 {
@@ -27,8 +28,7 @@ class AddCategoryRequest extends FormRequest
             "name" => "required|string|unique:categories"
         ];
     }
-
-
+    //mensajes que se muestran si no se cumple alguna regla
     public function messages(): array
     {
         return  [
@@ -36,5 +36,12 @@ class AddCategoryRequest extends FormRequest
             'name.required' => 'El nombre de la categoria es obligatorio.',
             'name.string' => 'El nombre de la categoria debe ser una cadena de texto válida.',
         ];
+    }
+
+    public function toDTO(): CreateCategoryDTO
+    {
+        return new CreateCategoryDTO(
+            name: $this->input("name")
+        );
     }
 }

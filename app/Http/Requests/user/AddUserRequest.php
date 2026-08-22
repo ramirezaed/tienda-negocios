@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\user;
 
+use App\DTO\User\CreateUserDTO;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -51,5 +52,17 @@ class AddUserRequest extends FormRequest
             'role.required' => 'El rol de usuario es obligatorio.',
             'role.string' => 'El rol debe ser una cadena de texto válida.',
         ];
+    }
+
+
+
+    public function toDTO(): CreateUserDTO
+    {
+        return new CreateUserDTO(
+            name: $this->input('name'),
+            email: $this->input('email'),
+            password: $this->input('password'),
+            role: $this->input('role'),
+        );
     }
 }

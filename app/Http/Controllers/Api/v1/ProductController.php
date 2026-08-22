@@ -3,31 +3,30 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\DTO\Products\ProductDTO;
+
 use App\Http\Controllers\Controller;
 use App\Http\Requests\product\AddProductRequest;
 use App\Http\Requests\product\UpdateProductRequest;
 use App\Http\Requests\search\FilterSearchFormRequest;
 use App\Http\Resources\product\ProductResource;
 use App\Models\Product;
+use App\service\product\ProductService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 
 class ProductController extends Controller
 {
+    //instancia el servicio de producto en el constructor
+    public function __construct(private ProductService $productService) {}
     //store es el nombre estandar cuando se quiere registrar
     public function store(AddProductRequest $request): JsonResponse
     {
-        // Extraemos los datos ya validados
-        $data = $request->validated();
-        // Instanciamos el DTO pasando
-        $productDTO = ProductDTO::fromArray($data);
-        //crea el nuevo producto usando los datos que vienen del dto
-        $product = Product::create($productDTO->toArray());
-        //
-        return response()->json(new ProductResource($product), 200);
+        //usa el metodo toDTO que se encuentra en el formRequest
+        $product = $this->productService->create($request->toDTO());
+        return response()->json(new ProductResource($product), 201);
     }
+
 
     //funcion para mostrar todos los productos
     public function index(FilterSearchFormRequest $request): AnonymousResourceCollection
@@ -54,17 +53,16 @@ class ProductController extends Controller
     }
 
     //funcion buscar producto por id
-    public function show(Product $product): JsonResponse
+    public function show(Product $product): ProductResource
     {
-        //verifica que el producto exista
-        return response()->json(new ProductResource($product), 201);
+        //devuelve el objeto completo
+        return new  ProductResource($product);
     }
 
     //funcion para actualizar un producto
     public function update(UpdateProductRequest $request, Product $product): JsonResponse
     {
-        //trae los datos validados del form request
-        $product->update($request->validated());
+        $product = $this->productService->update($request->toDTO(), $product);
         return response()->json(new ProductResource($product), 200);
     }
 

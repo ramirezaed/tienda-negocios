@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\product;
 
+use App\DTO\Products\UpdateProductDTO;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -58,5 +59,26 @@ class UpdateProductRequest extends FormRequest
             'category_id.integer' => 'El identificador de la categoría debe ser un número entero.',
             'category_id.exists' => 'La categoría seleccionada no existe en nuestro sistema.',
         ];
+    }
+
+    public function toDTO(): UpdateProductDTO
+    {
+        $validated = $this->validated();
+
+        return new UpdateProductDTO(
+            name: $validated['name'] ?? null,
+            description: $validated['description'] ?? null,
+            //array list solo se usa con datos float o int
+            price: array_key_exists('price', $validated)
+                ? (float) $validated['price']
+                : null,
+            stock: array_key_exists('stock', $validated)
+                ? (int) $validated['stock']
+                : null,
+            category_id: array_key_exists('category_id', $validated)
+                ? (int) $validated['categoria_id']
+                : null,
+            providedFields: array_keys($validated),
+        );
     }
 }
