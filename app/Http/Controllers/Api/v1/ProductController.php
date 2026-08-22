@@ -24,7 +24,7 @@ class ProductController extends Controller
     {
         //usa el metodo toDTO que se encuentra en el formRequest
         $product = $this->productService->create($request->toDTO());
-        return response()->json(new ProductResource($product), 200);
+        return response()->json(new ProductResource($product), 201);
     }
 
 

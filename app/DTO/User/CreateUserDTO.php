@@ -2,7 +2,7 @@
 
 namespace App\DTO\User;
 
-class UserDTO
+class CreateUserDTO
 {
     /**
      * Create a new class instance.
