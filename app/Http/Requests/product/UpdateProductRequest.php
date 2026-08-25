@@ -76,7 +76,7 @@ class UpdateProductRequest extends FormRequest
                 ? (int) $validated['stock']
                 : null,
             category_id: array_key_exists('category_id', $validated)
-                ? (int) $validated['categoria_id']
+                ? (int) $validated['category_id']
                 : null,
             providedFields: array_keys($validated),
         );
