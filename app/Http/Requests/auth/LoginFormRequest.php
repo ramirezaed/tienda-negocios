@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\auth;
 
+use App\DTO\auth\LoginDTO;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -36,5 +37,12 @@ class LoginFormRequest extends FormRequest
             'password.required' => 'La contraseña es obligatoria.',
             'password.string'   => 'La contraseña debe ser una cadena de texto.',
         ];
+    }
+    public function toDTO(): LoginDTO
+    {
+        return new LoginDTO(
+            email: $this->input('email'),
+            password: $this->input('password'),
+        );
     }
 }
