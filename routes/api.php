@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\V1\AuthController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\ProductController;
@@ -27,4 +28,8 @@ Route::prefix('V1')->group(function () {
 
     // Checkout
     Route::post('/checkout', [CheckoutController::class, 'checkout']);
+
+    Route::post("/login", [AuthController::class, "login"]);
+    Route::post("/register", [AuthController::class, "register"]);
+    Route::get("/profile", [AuthController::class, "profile"])->middleware("auth:api");
 });
