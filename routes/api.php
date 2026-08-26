@@ -17,17 +17,17 @@ Route::prefix('V1')->group(function () {
     Route::apiResource('products', ProductController::class);
 
     // Cart
-    Route::get('cart', [CartController::class, 'index']);
-    Route::post('cart/add', [CartController::class, 'addProduct']);
-    Route::post('cart/clear', [CartController::class, 'clear']);
-    Route::post('cart/remove', [CartController::class, 'removeProduct']);
-    Route::delete('cart', [CartController::class, 'destroy']);
+    Route::get('cart', [CartController::class, 'index'])->middleware("auth:api");
+    Route::post('cart/add', [CartController::class, 'addProduct'])->middleware("auth:api");
+    Route::post('cart/clear', [CartController::class, 'clear'])->middleware("auth:api");
+    Route::post('cart/remove', [CartController::class, 'removeProduct'])->middleware("auth:api");
+    Route::delete('cart', [CartController::class, 'destroy'])->middleware("auth:api");
 
     // Summary
-    Route::get('/summary', [CheckoutController::class, 'summary']);
+    Route::get('/summary', [CheckoutController::class, 'summary'])->middleware("auth:api");
 
     // Checkout
-    Route::post('/checkout', [CheckoutController::class, 'checkout']);
+    Route::post('/checkout', [CheckoutController::class, 'checkout'])->middleware("auth:api");
 
     Route::post("/login", [AuthController::class, "login"]);
     Route::post("/register", [AuthController::class, "register"]);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\cart;
 
+use App\DTO\cart\removeProductsToCartDTO;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -37,5 +38,14 @@ class RemoveProductFromCartRequest extends FormRequest
             'quantity.integer'    => 'La cantidad debe ser un número entero.',
             'quantity.min'        => 'La cantidad a quitar debe ser al menos 1.',
         ];
+    }
+
+
+    public function toDTO(): removeProductsToCartDTO
+    {
+        return new removeProductsToCartDTO(
+            product_id: $this->input("product_id"),
+            quantity: $this->input("quantity")
+        );
     }
 }

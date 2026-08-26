@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\cart\AddProductToCartRequest;
 use App\Http\Requests\cart\RemoveProductFromCartRequest;
+use App\Http\Resources\cart\addProductResource;
 use App\Models\Cart;
+use App\Models\CartItem;
 use App\service\CartService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -32,18 +34,10 @@ class CartController extends Controller
     }
 
     //funcion para agregar producto al carrito
-    public function addProduct(AddProductToCartRequest $request)
+    public function addProduct(AddProductToCartRequest $request): JsonResponse
     {
-        //ejecuta la logica de negocio
-        //si falla algo lanza las exepciones que estan en el servicio
-        $cartItem = $this->cartService->addProduct(
-            auth('api')->id(),
-            $request->validated('product_id'),
-            $request->validated('quantity')
-        );
-
-        // si cumple con todo agrega el producto al carrito
-        return response()->json([$cartItem], 200);
+        $cartItem = $this->cartService->addProduct($request->toDTO());
+        return response()->json(new addProductResource($cartItem), 200);
     }
 
 
@@ -58,11 +52,7 @@ class CartController extends Controller
     //funcion para quitar un producto del carrito
     public function removeProduct(RemoveProductFromCartRequest $request): JsonResponse
     {
-        $this->cartService->removeProduct(
-            auth('api')->id(),
-            $request->validated('product_id'),
-            $request->validated('quantity')
-        );
+        $this->cartService->removeProduct($request->toDTO());
         return response()->json(['message' => 'producto quitado con éxito'], 200);
     }
 
