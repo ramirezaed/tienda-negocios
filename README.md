@@ -1,58 +1,306 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# API - Tienda de Negocios
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Descripción
 
-## About Laravel
+Este proyecto consiste en el desarrollo de una API REST para una tienda de negocios, utilizando Laravel y PHP.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+La aplicación esta desarrollada siguiendo una arquitectura MVC, que permite separar las responsabilidades de la aplicación y facilita su mantenimiento y escalabilidad.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Actualmente, el proyecto se encuentra en desarrollo.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Tecnologías utilizadas
 
-## Learning Laravel
+- **PHP 8.4**
+- **Laravel**
+- **MySQL**
+- **Apache**
+- **XAMPP**
+- **Herd**
+- **phpMyAdmin**
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+# Requisitos
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- XAMPP
+- Herd
+- PHP 8.4
+- Composer
+- Laravel
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+# Instalación y configuración
 
-## Agentic Development
+## 1. Instalar XAMPP
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+Descargar e instalar **XAMPP**.
+
+Una vez instalado, abrir el panel de control de XAMPP y ejecutar los siguientes servicios:
+
+- **Apache**
+- **MySQL**
+
+## Ambos servicios deben estar activos para poder ejecutar correctamente la aplicación y conectarse a la base de datos.
+
+## 2. Instalar Herd
+
+Se utiliza **Laravel Herd** para disponer de la versión de PHP necesaria para el proyecto.
+
+Instalar Herd y verificar que PHP esté utilizando la versión **8.4**.
+
+Para comprobar la versión de PHP:
+
+php -v
+
+## 3. Clonar el Repo
+
+git clone "direccion del repo"
+
+ejecutar
+composer install
+
+# Configuración del archivo `.env`
+
+Laravel utiliza el archivo `.env` para almacenar configuraciones específicas del entorno, principalmente las relacionadas con la base de datos.
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=tienda_negocios
+DB_USERNAME=root
+DB_PASSWORD=
+
+````
+
+Los valores de `DB_DATABASE`, `DB_USERNAME` y `DB_PASSWORD` deben coincidir con la configuración de MySQL local.
+
+---
+
+# Crear la base de datos
+
+Con XAMPP ejecutando MySQL, ingresar a:
+
+```text
+http://localhost/phpmyadmin
+````
+
+Dentro de **phpMyAdmin**:
+
+1. Seleccionar **Nueva**.
+2. Crear una nueva base de datos.
+3. Utilizar el mismo nombre configurado en `DB_DATABASE`.
+
+# Ejecutar las migraciones
+
+Laravel utiliza migraciones para crear y modificar las tablas de la base de datos.
+
+php artisan migrate
+
+Si el proyecto cuenta con seeders y se desea cargar información inicial:
+
+php artisan db:seed
+
+También se puede ejecutar:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+php artisan migrate --seed
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+---
 
-## Contributing
+# Ejecutar el proyecto
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+php artisan serve
 
-## Code of Conduct
+Por defecto, la aplicación estará disponible en:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+http://127.0.0.1:8000
 
-## Security Vulnerabilities
+# Arquitectura MVC
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+El proyecto utiliza el patrón **MVC (Model-View-Controller)**.
 
-## License
+MVC divide la aplicación en tres componentes principales:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Model
+
+El **Modelo** representa los datos de la aplicación y se encarga de interactuar con la base de datos.
+
+En Laravel, los modelos normalmente utilizan **Eloquent ORM** para consultar, crear, modificar y eliminar información.
+
+### Controller
+
+El **Controlador** recibe la petición y contiene la lógica necesaria para procesarla.
+
+Su responsabilidad es coordinar las acciones necesarias, por ejemplo:
+
+1. Recibir los datos enviados por el cliente.
+2. Validar la información.
+3. Utilizar un modelo para consultar o modificar la base de datos.
+4. Generar y devolver una respuesta.
+
+### View
+
+La **Vista** representa la información que se devuelve al usuario.
+
+En una aplicación Laravel tradicional puede utilizarse **Blade** para generar HTML.
+
+Sin embargo, en este proyecto se está desarrollando una **API**, por lo que las respuestas normalmente se devuelven en formato **JSON** en lugar de una vista HTML.
+
+---
+
+# Relación entre Modelo y Controlador
+
+La relación entre ambos componentes puede explicarse de manera sencilla:
+
+> **El controlador recibe la petición y utiliza el modelo para acceder a los datos.**
+
+# Flujo de información en Laravel
+
+El flujo general de una petición HTTP en Laravel puede representarse de la siguiente manera:
+
+```text
+Cliente
+   │
+   │ HTTP Request
+   ▼
+Ruta (Route)
+   │
+   ▼
+Controlador (Controller)
+   │
+   ▼
+Modelo (Model)
+   │
+   ▼
+Base de datos
+   │
+   ▼
+Modelo
+   │
+   ▼
+Controlador
+   │
+   ▼
+Vista / Respuesta JSON
+   │
+   ▼
+Cliente
+```
+
+## 1. Petición HTTP
+
+El cliente realiza una petición al servidor.
+
+## 2. Ruta
+
+Laravel recibe la petición y busca una ruta que coincida con el método HTTP y la URL.
+
+## 3. Controlador
+
+El controlador recibe la petición y ejecuta la lógica correspondiente.
+
+## 4. Modelo
+
+El modelo utiliza Eloquent para comunicarse con la base de datos.
+
+## 5. Vista o respuesta
+
+En una aplicación MVC tradicional, el controlador puede enviar los datos a una **Vista Blade**:
+
+# Resumen
+
+El proyecto consiste en una **API para una tienda de negocios desarrollada con Laravel**, utilizando PHP 8.4, MySQL y una arquitectura MVC.
+
+El flujo principal de Laravel puede resumirse como:
+
+```text
+Petición HTTP
+      ↓
+    Ruta
+      ↓
+ Controlador
+      ↓
+    Modelo
+      ↓
+  Base de datos
+      ↓
+    Modelo
+      ↓
+ Controlador
+      ↓
+ Respuesta JSON
+      ↓
+    Cliente
+```
+
+La separación de responsabilidades permite que los **modelos se encarguen de los datos**, los **controladores gestionen las peticiones y la lógica de la aplicación**, y las **vistas o respuestas JSON presenten la información al cliente**.
+
+## Endpoints de la API
+
+La API está organizada en seis grupos principales de rutas, todas bajo el prefijo /api/V1. A continuación se detallan los endpoints disponibles:
+
+## Usuarios (/api/V1/users)
+
+### Método Endpoint Controlador Función Descripción
+
+GET /api/V1/users UserController@index Listar usuarios Obtiene todos los usuarios registrados
+
+POST /api/V1/users UserController@store Registrar usuario Crea un nuevo usuario en el sistema
+
+GET /api/V1/users/{id} UserController@show Ver usuario Obtiene los datos de un usuario específico
+
+PUT /api/V1/users/{id} UserController@update Actualizar usuario Modifica los datos de un usuario existente
+
+DELETE /api/V1/users/{id} UserController@destroy Eliminar usuario Elimina un usuario del sistema
+
+## Categorías (/api/V1/categories)
+
+### Método Endpoint Controlador Función Descripción
+
+GET /api/V1/categories CategoryController@index Listar categorías Obtiene todas las categorías disponibles
+
+POST /api/V1/categories CategoryController@store Crear categoría Registra una nueva categoría
+
+GET /api/V1/categories/{id} CategoryController@show Ver categoría Obtiene los datos de una categoría específica
+
+PUT /api/V1/categories/{id} CategoryController@update Actualizar categoría Modifica los datos de una categoría existente
+
+DELETE /api/V1/categories/{id} CategoryController@destroy Eliminar categoría Elimina una categoría del sistema
+
+## Productos (/api/V1/products)
+
+### Método Endpoint Controlador Función Descripción
+
+GET /api/V1/products ProductController@index Listar productos Obtiene todos los productos disponibles
+
+POST /api/V1/products ProductController@store Crear producto Registra un nuevo producto
+
+GET /api/V1/products/{id} ProductController@show Ver producto Obtiene los datos de un producto específico
+
+PUT /api/V1/products/{id} ProductController@update Actualizar producto Modifica los datos de un producto existente
+
+DELETE /api/V1/products/{id} ProductController@destroy Eliminar producto Elimina un producto del sistema
+
+## Carrito (/api/V1/cart)
+
+### Método Endpoint Controlador Función Descripción
+
+GET /api/V1/cart CartController@index Ver carrito Muestra el contenido actual del carrito
+
+POST /api/V1/cart/add CartController@addProduct Agregar producto Añade un producto al carrito
+
+POST /api/V1/cart/remove CartController@removeProduct Quitar producto Elimina un producto específico del carrito
+
+POST /api/V1/cart/clear CartController@clear Vaciar carrito Elimina todos los productos del carrito
+
+DELETE /api/V1/cart CartController@destroy Eliminar carrito Elimina completamente el carrito
+
+## Resumen (/api/V1/summary)
+
+### Método Endpoint Controlador Función Descripción
+
+GET /api/V1/summary CheckoutController@summary Obtener resumen Obtiene el resumen del carrito, incluyendo subtotal, impuestos, costo de envío y total
+
+## Checkout (/api/V1/checkout)
+
+### Método Endpoint Controlador Función Descripción
+
+POST /api/V1/checkout CheckoutController@checkout Procesar checkout Procesa la compra y genera la orden correspondiente

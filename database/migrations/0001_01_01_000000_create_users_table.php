@@ -17,8 +17,12 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            //en esta etapa del proyecto el rol puede ser null
+            //en un futuro se agreaga una tabla para los roles
+            $table->string("role");
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes(); // campo para eliminacion logica
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
