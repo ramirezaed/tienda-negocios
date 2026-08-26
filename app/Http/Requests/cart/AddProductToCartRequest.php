@@ -26,7 +26,6 @@ class AddProductToCartRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|integer|exists:users,id',
             'product_id' => 'required|integer|exists:products,id',
             'quantity' => 'required|integer|min:1',
         ];
@@ -36,9 +35,7 @@ class AddProductToCartRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'user_id.required' => 'El usuario es obligatorio.',
-            'user_id.integer' => 'El usuario debe ser un número entero.',
-            'user_id.exists' => 'El usuario no existe.',
+
 
             'product_id.required' => 'El producto es obligatorio.',
             'product_id.integer' => 'El producto debe ser un número entero.',

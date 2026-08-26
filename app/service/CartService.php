@@ -88,13 +88,12 @@ class CartService
     }
 
     //funcion para quitar un prodcuto del carrito
-    public function removeProduct(int $userId, int $productId): Cart
+    public function removeProduct(int $userId, int $productId, int $quantity): Cart
     {
         $cart = Cart::where('user_id', $userId)->first();
         if (!$cart) {
             throw new CartNotFoundException();
         }
-
         $cartItem = CartItem::where('cart_id', $cart->id)
             ->where('product_id', $productId)
             ->first();
@@ -103,14 +102,25 @@ class CartService
             throw new CartItemNotFoundException();
         }
 
-        // devolvemos el stock ANTES de borrar el item, usando su propia cantidad
         $product = Product::find($cartItem->product_id);
-        if ($product) {
-            $product->increment('stock', $cartItem->quantity);
+
+        if ($quantity >= $cartItem->quantity) {
+            // Si piden quitar más o lo mismo que hay, devolvemos todo el stock y borramos el item
+            if ($product) {
+                $product->increment('stock', $cartItem->quantity);
+            }
+            $cartItem->delete();
+        } else {
+            // Si piden quitar menos, restamos esa cantidad del item y la devolvemos al stock del producto
+            if ($product) {
+                $product->increment('stock', $quantity);
+            }
+            $cartItem->quantity -= $quantity;
+            $cartItem->sub_total = $cartItem->quantity * $cartItem->price; // recalcula el subtotal
+            $cartItem->save();
         }
-        //elimina el producto
-        $cartItem->delete();
-        //actualiza el total y subtotal
+
+        // Actualiza el total general del carrito
         $cart->update(['total' => $cart->items()->sum('sub_total')]);
 
         return $cart;
@@ -118,7 +128,6 @@ class CartService
 
     //servicio par eliminar un carrito
     public function deleteCart(int $userId): void
-
     {
         //busca el carrito del usuario
         $cart = Cart::with('items')->where('user_id', $userId)->first();

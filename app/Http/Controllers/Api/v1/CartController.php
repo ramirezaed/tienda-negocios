@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\cart\AddProductToCartRequest;
-use App\Http\Requests\cart\ClearCartRequest;
 use App\Http\Requests\cart\RemoveProductFromCartRequest;
 use App\Models\Cart;
 use App\service\CartService;
@@ -18,8 +17,8 @@ class CartController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        //input se utiliza para recuper datos que el cliente envia a travez de una peticion http
-        $userId = $request->input('user_id');
+        //se obtiene el user id con la funcion auth
+        $userId = auth('api')->id();
         // muestra el carrito con los datos selecionado
         $cart = Cart::where('user_id', $userId)
             ->with(['items.product' => function ($query) {
@@ -38,7 +37,7 @@ class CartController extends Controller
         //ejecuta la logica de negocio
         //si falla algo lanza las exepciones que estan en el servicio
         $cartItem = $this->cartService->addProduct(
-            $request->validated('user_id'),
+            auth('api')->id(),
             $request->validated('product_id'),
             $request->validated('quantity')
         );
@@ -49,9 +48,9 @@ class CartController extends Controller
 
 
     //funcion para vaciar el carrito
-    public function clear(ClearCartRequest $request): JsonResponse
+    public function clear(): JsonResponse
     {
-        $this->cartService->clear($request->validated('user_id'));
+        $this->cartService->clear(auth('api')->id());
         return response()->json(['message' => 'el carrito se vacio correctamente'], 200);
     }
 
@@ -60,16 +59,17 @@ class CartController extends Controller
     public function removeProduct(RemoveProductFromCartRequest $request): JsonResponse
     {
         $this->cartService->removeProduct(
-            $request->validated('user_id'),
+            auth('api')->id(),
             $request->validated('product_id'),
+            $request->validated('quantity')
         );
         return response()->json(['message' => 'producto quitado con éxito'], 200);
     }
 
     //funcion para eliminar un carrito
-    public function destroy(ClearCartRequest $request): JsonResponse
+    public function destroy(): JsonResponse
     {
-        $this->cartService->deleteCart($request->validated('user_id'));
+        $this->cartService->deleteCart(auth('api')->id());
         return response()->json(['message' => 'carrito eliminado con éxito'], 200);
     }
 }

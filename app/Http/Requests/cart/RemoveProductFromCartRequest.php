@@ -23,8 +23,19 @@ class RemoveProductFromCartRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|integer|exists:users,id',
             'product_id' => 'required|integer|exists:products,id',
+            'quantity'   => 'required|integer|min:1',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'product_id.required' => 'El ID del producto es obligatorio.',
+            'product_id.exists'   => 'El producto seleccionado no existe.',
+            'quantity.required'   => 'La cantidad a quitar es obligatoria.',
+            'quantity.integer'    => 'La cantidad debe ser un número entero.',
+            'quantity.min'        => 'La cantidad a quitar debe ser al menos 1.',
         ];
     }
 }
