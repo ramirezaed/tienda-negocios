@@ -17,7 +17,7 @@ class SummaryResource extends JsonResource
         return [
             "id" => $this->id,
             "sub total" => $this->sub_total,
-            " impuesto" => $this->tax,
+            "impuesto" => $this->tax,
             "costo de envio" => $this->shipping_cost,
             "total" => $this->totol
         ];
