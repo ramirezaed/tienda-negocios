@@ -3,6 +3,7 @@
 namespace App\service;
 
 use App\DTO\cart\addProductsToCartDTO;
+use App\DTO\cart\removeProductsToCartDTO;
 use App\Exceptions\CartItemNotFoundException;
 use App\Exceptions\CartNotFoundException;
 use App\Exceptions\InsufficientStockException;
@@ -90,42 +91,45 @@ class CartService
     }
 
     //funcion para quitar un prodcuto del carrito
-    public function removeProduct(int $userId, int $productId, int $quantity): Cart
+    public function removeProduct(removeProductsToCartDTO $request): Cart
     {
-        $cart = Cart::where('user_id', $userId)->first();
-        if (!$cart) {
-            throw new CartNotFoundException();
-        }
-        $cartItem = CartItem::where('cart_id', $cart->id)
-            ->where('product_id', $productId)
-            ->first();
+        return DB::transaction(function () use ($request) {
 
-        if (!$cartItem) {
-            throw new CartItemNotFoundException();
-        }
-
-        $product = Product::find($cartItem->product_id);
-
-        if ($quantity >= $cartItem->quantity) {
-            // Si piden quitar más o lo mismo que hay, devolvemos todo el stock y borramos el item
-            if ($product) {
-                $product->increment('stock', $cartItem->quantity);
+            $cart = Cart::where('user_id', auth('api')->id())->first();
+            if (!$cart) {
+                throw new CartNotFoundException();
             }
-            $cartItem->delete();
-        } else {
-            // Si piden quitar menos, restamos esa cantidad del item y la devolvemos al stock del producto
-            if ($product) {
-                $product->increment('stock', $quantity);
+            $cartItem = CartItem::where('cart_id', $cart->id)
+                ->where('product_id', $request->product_id)
+                ->first();
+
+            if (!$cartItem) {
+                throw new CartItemNotFoundException();
             }
-            $cartItem->quantity -= $quantity;
-            $cartItem->sub_total = $cartItem->quantity * $cartItem->price; // recalcula el subtotal
-            $cartItem->save();
-        }
 
-        // Actualiza el total general del carrito
-        $cart->update(['total' => $cart->items()->sum('sub_total')]);
+            $product = Product::find($cartItem->product_id);
 
-        return $cart;
+            if ($request->quantity >= $cartItem->quantity) {
+                // Si piden quitar más o lo mismo que hay, devolvemos todo el stock y borramos el item
+                if ($product) {
+                    $product->increment('stock', $cartItem->quantity);
+                }
+                $cartItem->delete();
+            } else {
+                // Si piden quitar menos, restamos esa cantidad del item y la devolvemos al stock del producto
+                if ($product) {
+                    $product->increment('stock', $request->quantity);
+                }
+                $cartItem->quantity -= $request->quantity;
+                $cartItem->sub_total = $cartItem->quantity * $cartItem->price; // recalcula el subtotal
+                $cartItem->save();
+            }
+
+            // Actualiza el total general del carrito
+            $cart->update(['total' => $cart->items()->sum('sub_total')]);
+
+            return $cart->refresh();
+        });
     }
 
     //servicio par eliminar un carrito

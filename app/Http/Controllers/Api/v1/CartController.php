@@ -52,11 +52,7 @@ class CartController extends Controller
     //funcion para quitar un producto del carrito
     public function removeProduct(RemoveProductFromCartRequest $request): JsonResponse
     {
-        $this->cartService->removeProduct(
-            auth('api')->id(),
-            $request->validated('product_id'),
-            $request->validated('quantity')
-        );
+        $this->cartService->removeProduct($request->toDTO());
         return response()->json(['message' => 'producto quitado con éxito'], 200);
     }
 
