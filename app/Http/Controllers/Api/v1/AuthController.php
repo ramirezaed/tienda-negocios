@@ -9,17 +9,21 @@ use App\Http\Resources\auth\loginResource;
 use App\Http\Resources\auth\profileResorce;
 use App\Http\Resources\auth\registerResorce;
 use App\service\auth\authService;
+use App\service\auth\LoginService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AuthController extends Controller
 {
     //funcion para iniciar sesion
-    public function __construct(private authService $auth_service) {}
+    public function __construct(
+        private authService $auth_service,
+        private LoginService $loginService
+    ) {}
 
     public  function login(LoginFormRequest $request): JsonResponse
     {
         $credentials = $request->toDTO();
-        $token = auth('api')->attempt($credentials->toArray());
+        $token = $this->loginService->login($credentials);
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
