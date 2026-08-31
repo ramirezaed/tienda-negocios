@@ -41,7 +41,6 @@ class CheckoutService
         ];
     }
 
-
     //Calcula el totoal, llamando a funcion privada que calcula el con envio e imuesto
     public function getSummary(int $userId): array
     {

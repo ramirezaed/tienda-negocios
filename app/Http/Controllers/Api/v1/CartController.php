@@ -56,6 +56,7 @@ class CartController extends Controller
         return response()->json(['message' => 'producto quitado con éxito'], 200);
     }
 
+
     //funcion para eliminar un carrito
     public function destroy(): JsonResponse
     {

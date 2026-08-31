@@ -29,7 +29,7 @@ Route::prefix('V1')->group(function () {
     // Checkout
     Route::post('/checkout', [CheckoutController::class, 'checkout'])->middleware("auth:api");
 
-    Route::post("/login", [AuthController::class, "login"]);
-    Route::post("/register", [AuthController::class, "register"]);
-    Route::get("/profile", [AuthController::class, "profile"])->middleware("auth:api");
+    Route::post("/login", [AuthController::class, "login"])->middleware('throttle:10,1');
+    Route::post("/register", [AuthController::class, "register"])->middleware('throttle:10,1');;
+    Route::get("/profile", [AuthController::class, "profile"])->middleware(['throttle:10,1', "auth:api"]);
 });
