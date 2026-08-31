@@ -304,3 +304,11 @@ GET /api/V1/summary CheckoutController@summary Obtener resumen Obtiene el resume
 ### Método Endpoint Controlador Función Descripción
 
 POST /api/V1/checkout CheckoutController@checkout Procesar checkout Procesa la compra y genera la orden correspondiente
+
+### Método Endpoint Controlador Función Descripción
+
+POST /api/V1/login AuthController@login Iniciar sesión Autentica al usuario y devuelve un token JWT
+
+POST /api/V1/register AuthController@register Registrar usuario Registra un nuevo usuario en el sistema
+
+GET /api/V1/profile AuthController@profile Ver perfil Obtiene los datos del usuario autenticado mediante JWT
