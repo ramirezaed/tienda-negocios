@@ -14,8 +14,9 @@ class CheckoutService
     private const SHIPPING_COST = 5000.00; //define el valor fijo del envio
 
     //funcion para obtener carrito, valida que exista y que tenga items
-    private function getValidCart(int $userId): Cart
+    private function getValidCart(): Cart
     {
+        $userId = auth()->id();
         $cart = Cart::with('items')->where('user_id', $userId)->first();
         //isEmpty -> metodo de laravel, verifica que la coleccion esta vacia
         //si no hay carrito, o si esta vacio
@@ -42,18 +43,19 @@ class CheckoutService
     }
 
     //Calcula el totoal, llamando a funcion privada que calcula el con envio e imuesto
-    public function getSummary(int $userId): array
+    public function getSummary(): array
     {
-        $cart = $this->getValidCart($userId);
+        $cart = $this->getValidCart();
         return $this->calculateSummary($cart->total);
     }
 
     // confirmacion de compra
-    public function processCheckout(int $userId, string $address): Order
+    public function processCheckout(string $address): Order
     {
         //DB::transaction -> se ejecuta todo o nada
-        return DB::transaction(function () use ($userId, $address) {
-            $cart = $this->getValidCart($userId);
+        return DB::transaction(function () use ($address) {
+            $userId = auth()->id();
+            $cart = $this->getValidCart();
             $summary = $this->calculateSummary($cart->total);
 
             $order = Order::create([
