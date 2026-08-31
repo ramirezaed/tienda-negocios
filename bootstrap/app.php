@@ -63,17 +63,17 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
 
-        //manejo de errores 500, error interno del servidor
-        // $exceptions->render(function (\Throwable $exception, Request $request) {
-        //     if (!$request->is("api/*")) {
-        //         return null;
-        //     }
+        // manejo de errores 500, error interno del servidor
+        $exceptions->render(function (\Throwable $exception, Request $request) {
+            if (!$request->is("api/*")) {
+                return null;
+            }
 
-        //     return response()->json([
-        //         // "message" => "Error interno del servidor",
-        //         "message" => $exception->getMessage(),
-        //         "status" => 500,
-        //         "error" => (object)[]
-        //     ], 500);
-        // });
+            return response()->json([
+                // "message" => "Error interno del servidor",
+                "message" => $exception->getMessage(),
+                "status" => 500,
+                "error" => (object)[]
+            ], 500);
+        });
     })->create();
