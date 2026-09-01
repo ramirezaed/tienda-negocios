@@ -143,7 +143,6 @@ class AuthApiTest extends TestCase
     public function test_cliente_no_puede_acceder_a_su_perfil_sin_autenticacion(): void
     {
         $response = $this->getJson("/api/V1/profile");
-
         $response->assertUnauthorized();
     }
 }

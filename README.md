@@ -369,6 +369,42 @@ Ejecutar: php artisan test --filter AuthApiTest
 
 ---
 
+## ProductApiTest - Modulo Productos
+
+**test_usuario_agrega_producto**
+Usuario autenticado crea producto con datos completos. Resultado: 201 Created, datos correctos y disponible true.
+
+**test_usuario_no_registrado_agrega_producto**
+Usuario sin autenticacion intenta crear producto. Resultado: 401 Unauthorized.
+
+**test_usuario_agrega_producto_nombre_duplicado**
+Intenta crear producto con nombre ya existente. Resultado: 422 Unprocessable Entity.
+
+**test_usuario_agrega_producto_con_datos_incompletos**
+Intenta crear producto sin campo price. Resultado: 422 Unprocessable Entity.
+
+**test_usuario_agrega_producto_con_stock_cero**
+Intenta crear producto con stock 0. Resultado: 422 Unprocessable Entity.
+
+**test_usuario_modifica_producto**
+Usuario autenticado modifica producto existente. Resultado: 200 OK, datos actualizados correctamente.
+
+**test_usuario_no_registrado_modifica_producto**
+Usuario sin autenticacion intenta modificar producto. Resultado: 401 Unauthorized.
+
+**test_usuario_elimina_producto**
+Usuario autenticado elimina producto existente. Resultado: 200 OK.
+
+**test_usuario_no_registrado_elimina_producto**
+Usuario sin autenticacion intenta eliminar producto. Resultado: 401 Unauthorized.
+
+**test_usuario_elimina_producto_no_registrado**
+Usuario autenticado intenta eliminar producto inexistente. Resultado: 404 Not Found.
+
+Ejecutar: php artisan test --filter ProductApiTest
+
+---
+
 ## Comandos Generales
 
 Ejecutar todas las pruebas: php artisan test
