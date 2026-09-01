@@ -11,25 +11,39 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('V1')->group(function () {
 
-    // Resources
-    Route::apiResource('categories', CategoryController::class);
-    Route::apiResource('users', UserController::class);
-    Route::apiResource('products', ProductController::class);
+    // ============ RUTAS PUBLICAS (sin autenticacion) ============
 
-    // Cart
-    Route::get('cart', [CartController::class, 'index'])->middleware("auth:api");
-    Route::post('cart/add', [CartController::class, 'addProduct'])->middleware("auth:api");
-    Route::post('cart/clear', [CartController::class, 'clear'])->middleware("auth:api");
-    Route::post('cart/remove', [CartController::class, 'removeProduct'])->middleware("auth:api");
-    Route::delete('cart', [CartController::class, 'destroy'])->middleware("auth:api");
+    // Products y Categories - solo index y show públicos
+    Route::apiResource('products', ProductController::class)->only(['index', 'show']);
+    Route::apiResource('categories', CategoryController::class)->only(['index', 'show']);
 
-    // Summary
-    Route::get('/summary', [CheckoutController::class, 'summary'])->middleware("auth:api");
-
-    // Checkout
-    Route::post('/checkout', [CheckoutController::class, 'checkout'])->middleware("auth:api");
-
+    // Auth - login y register públicos (con throttle)
     Route::post("/login", [AuthController::class, "login"])->middleware('throttle:10,1');
-    Route::post("/register", [AuthController::class, "register"])->middleware('throttle:10,1');;
-    Route::get("/profile", [AuthController::class, "profile"])->middleware(['throttle:10,1', "auth:api"]);
+    Route::post("/register", [AuthController::class, "register"])->middleware('throttle:10,1');
+
+
+    // ============ RUTAS PROTEGIDAS (requieren autenticación) ============
+
+    Route::middleware(['auth:api'])->group(function () {
+
+        // Products - métodos de escritura protegidos
+        Route::apiResource('products', ProductController::class)->only(['store', 'update', 'destroy']);
+        // Categories - métodos de escritura protegidos
+        Route::apiResource('categories', CategoryController::class)->only(['store', 'update', 'destroy']);
+        // Users - TODOS los métodos protegidos
+        Route::apiResource('users', UserController::class);
+        // Cart
+        Route::get('cart', [CartController::class, 'index']);
+        Route::post('cart/add', [CartController::class, 'addProduct']);
+        Route::post('cart/clear', [CartController::class, 'clear']);
+        Route::post('cart/remove', [CartController::class, 'removeProduct']);
+        Route::delete('cart', [CartController::class, 'destroy']);
+
+        // Summary
+        Route::get('/summary', [CheckoutController::class, 'summary']);
+        // Checkout
+        Route::post('/checkout', [CheckoutController::class, 'checkout']);
+        // Profile
+        Route::get("/profile", [AuthController::class, "profile"])->middleware('throttle:10,1');
+    });
 });
