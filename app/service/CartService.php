@@ -76,8 +76,9 @@ class CartService
         });
     }
 
-    public function clear(int $userId): Cart
+    public function clear(): Cart
     {
+        $userId = auth()->id();
         $cart = Cart::with('items')->where('user_id', $userId)->first();
         if (!$cart) {
             throw new CartNotFoundException();
@@ -95,7 +96,8 @@ class CartService
     {
         return DB::transaction(function () use ($request) {
 
-            $cart = Cart::where('user_id', auth('api')->id())->first();
+            // $cart = Cart::where('user_id', auth('api')->id())->first();
+            $cart = Cart::where('user_id', auth()->id())->first();
             if (!$cart) {
                 throw new CartNotFoundException();
             }
@@ -133,8 +135,9 @@ class CartService
     }
 
     //servicio par eliminar un carrito
-    public function deleteCart(int $userId): void
+    public function deleteCart(): void
     {
+        $userId = auth()->id();
         //busca el carrito del usuario
         $cart = Cart::with('items')->where('user_id', $userId)->first();
         if (!$cart) {

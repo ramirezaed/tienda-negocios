@@ -14,7 +14,7 @@ class CheckoutService
     private const SHIPPING_COST = 5000.00; //define el valor fijo del envio
 
     //funcion para obtener carrito, valida que exista y que tenga items
-    private function getValidCart(): Cart
+    public function getValidCart(): Cart
     {
         $userId = auth()->id();
         $cart = Cart::with('items')->where('user_id', $userId)->first();
@@ -28,7 +28,7 @@ class CheckoutService
     }
 
     //funcion para calcular el total con envio e impuesto
-    private function calculateSummary(float $subtotal): array
+    public function calculateSummary(float $subtotal): array
     {
         $tax = round($subtotal * self::TAX, 2); //calcula el valor del impuesto 
         $shippingCost =  self::SHIPPING_COST; //asigna el valor al costo de envio

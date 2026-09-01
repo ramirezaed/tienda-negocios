@@ -312,3 +312,163 @@ POST /api/V1/login AuthController@login Iniciar sesión Autentica al usuario y d
 POST /api/V1/register AuthController@register Registrar usuario Registra un nuevo usuario en el sistema
 
 GET /api/V1/profile AuthController@profile Ver perfil Obtiene los datos del usuario autenticado mediante JWT
+
+# Documentación de Pruebas Unitarias - ResumenCarritoTest
+
+## Descripción General
+
+Este conjunto de pruebas unitarias está diseñado para validar el correcto funcionamiento del módulo de carrito de compras en la aplicación. Las pruebas cubren las funcionalidades principales del carrito, incluyendo:
+
+Cálculo de resumen de compra con envío
+
+Agregar y eliminar productos
+
+Manejo de inventario (stock)
+
+Limpieza y eliminación del carrito
+
+## Estructura de las Pruebas
+
+### Configuración Inicial
+
+Las pruebas utilizan la trait RefreshDatabase para asegurar que la base de datos se reinicie en cada prueba, manteniendo un estado limpio y consistente.
+
+### Datos de Prueba
+
+La función DatosSimulados() prepara el entorno de prueba creando:
+
+Un usuario de prueba (ID: 1)
+
+Una categoría de prueba
+
+Dos productos con precios y stock específicos:
+
+Producto 1: $1,500.00 (stock: 10)
+
+Producto 2: $2,500.00 (stock: 5)
+Casos de Prueba
+
+1. Cálculo de Carrito con Envío (test_calcular_carrito_con_envio)
+   Objetivo: Verificar que el cálculo del resumen del carrito sea correcto incluyendo impuestos y costo de envío.
+
+Escenario:
+
+Se agrega un producto con precio de $20,000 (cantidad: 1)
+
+Se calcula el subtotal, impuestos (21%), costo de envío ($5,000) y total
+
+Resultado Esperado:
+[
+"subtotal" => 20000,
+"tax" => 4200,
+"shipping_cost" => 5000,
+"total" => 29200
+]
+
+2. Agregar Producto con Cantidad Igual al Stock (test_agregar_producto_con_cantidad_igual_al_stock)
+   Objetivo: Validar que se pueda agregar un producto al carrito cuando la cantidad solicitada es igual al stock disponible.
+
+Escenario:
+
+Se agrega el Producto 1 (stock: 10) con cantidad 10
+
+Se verifica la cantidad, subtotal y actualización del stock
+
+Validaciones:
+
+Cantidad en carrito: 10
+Subtotal: $15,000.00
+Stock actualizado: 0
+Total del carrito: $15,000.00
+
+Agregar Producto con Cantidad Mayor al Stock (test_agregar_producto_con_cantidad_mayor_al_stock)
+Objetivo: Asegurar que el sistema rechace solicitudes que excedan el stock disponible.
+
+Escenario:
+
+Se intenta agregar el Producto 1 (stock: 10) con cantidad 11
+
+El sistema debe lanzar una excepción
+
+Validación:
+
+Se lanza InsufficientStockException
+
+4. Quitar Producto del Carrito (test_quitar_producto_del_carrito)
+   Objetivo: Verificar que al eliminar un producto del carrito, se actualice correctamente el stock y los totales.
+
+Escenario:
+
+Se agregan 5 unidades del Producto 1
+
+Se eliminan las 5 unidades
+
+Validaciones:
+
+Carrito queda vacío
+
+Stock restaurado a 10
+
+Total del carrito: 0 5. Eliminar Carrito (test_eliminar_carrito_vacia_los_items_y_restaura_el_stock)
+Objetivo: Comprobar que al eliminar completamente el carrito, se restaure el stock de todos los productos.
+
+Escenario:
+
+Se agregan 4 unidades del Producto 1 (stock: 10 → 6)
+
+Se agregan 2 unidades del Producto 2 (stock: 5 → 3)
+
+Se elimina el carrito
+
+Validaciones:
+
+El carrito no existe en la base de datos
+Stock Producto 1: 10
+Stock Producto 2: 5
+
+6. Limpiar Carrito (test_limpiar_carrito_restaurar_stock_items)
+   Objetivo: Verificar que al limpiar el carrito (vaciar pero mantener la instancia), se restaure el stock.
+
+Escenario:
+
+Se agregan 4 unidades del Producto 1
+
+Se agregan 2 unidades del Producto 2
+
+Se limpia el carrito
+
+Validaciones:
+
+El carrito existe pero está vacío
+
+Total del carrito: 0
+
+Stock restaurado a valores originales
+
+Cómo Ejecutar las Pruebas
+Prerrequisitos
+PHP instalado
+
+Composer instalado
+
+Base de datos configurada
+
+Framework Laravel instalado
+
+# Ejecutar Todas las Pruebas
+
+php artisan test --filter=ResumenCarritoTest
+
+Ejecutar Pruebas Específicas
+
+# Ejecutar solo este archivo de pruebas
+
+php artisan test --filter ResumenCarritoTest
+
+# Ejecutar una prueba específica
+
+php artisan test --filter test_calcular_carrito_con_envio
+
+# Ejecutar con cobertura de código (si está configurado)
+
+php artisan test --coverage
