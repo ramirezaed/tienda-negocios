@@ -304,3 +304,143 @@ GET /api/V1/summary CheckoutController@summary Obtener resumen Obtiene el resume
 ### Método Endpoint Controlador Función Descripción
 
 POST /api/V1/checkout CheckoutController@checkout Procesar checkout Procesa la compra y genera la orden correspondiente
+
+### Método Endpoint Controlador Función Descripción
+
+POST /api/V1/login AuthController@login Iniciar sesión Autentica al usuario y devuelve un token JWT
+
+POST /api/V1/register AuthController@register Registrar usuario Registra un nuevo usuario en el sistema
+
+GET /api/V1/profile AuthController@profile Ver perfil Obtiene los datos del usuario autenticado mediante JWT
+
+# Documentacion de Pruebas Unitarias
+
+## ResumenCarritoTest - Modulo Carrito
+
+**test_calcular_carrito_con_envio**
+Calcula subtotal, impuestos y envio. Resultado: Subtotal 20000, Tax 4200, Envio 5000, Total 29200.
+
+**test_agregar_producto_con_cantidad_igual_al_stock**
+Agrega producto con stock exacto. Resultado: Cantidad 10, Stock final 0.
+
+**test_agregar_producto_con_cantidad_mayor_al_stock**
+Rechaza cantidad superior al stock. Resultado: Excepcion InsufficientStockException.
+
+**test_quitar_producto_del_carrito**
+Elimina producto y restaura stock. Resultado: Carrito vacio, Stock original restaurado.
+
+**test_eliminar_carrito_vacia_los_items_y_restaura_el_stock**
+Elimina carrito y restaura stocks. Resultado: Carrito eliminado, Stocks originales.
+
+**test_limpiar_carrito_restaurar_stock_items**
+Vacia carrito manteniendo instancia. Resultado: Carrito vacio, Total 0, Stocks originales.
+
+Ejecutar: php artisan test --filter ResumenCarritoTest
+
+---
+
+## AuthApiTest - Modulo Autenticacion
+
+**test_un_cliente_se_registra**
+Registro con datos completos. Resultado: 200 OK, devuelve token y datos del usuario.
+
+**test_cliente_se_registra_con_datos_incompletos**
+Registro sin email. Resultado: 422 Unprocessable Entity.
+
+**test_cliente_se_registra_con_password_diferentes**
+Passwords no coinciden. Resultado: 422 Unprocessable Entity.
+
+**test_cliente_se_registra_con_email_duplicado**
+Email ya registrado. Resultado: 422 Unprocessable Entity.
+
+**test_cliente_inicia_sesion**
+Login con credenciales correctas. Resultado: 200 OK, devuelve token, password oculto.
+
+**test_cliente_no_puede_iniciar_session**
+Login con email incorrecto. Resultado: 401 Unauthorized.
+
+**test_cliente_ingresa_a_su_perfil**
+Acceso a perfil con token valido. Resultado: 200 OK, password oculto.
+
+**test_cliente_no_puede_acceder_a_su_perfil_sin_autenticacion**
+Acceso sin token. Resultado: 401 Unauthorized.
+
+Ejecutar: php artisan test --filter AuthApiTest
+
+---
+
+## ProductApiTest - Modulo Productos
+
+**test_usuario_agrega_producto**
+Usuario autenticado crea producto con datos completos. Resultado: 201 Created, datos correctos y disponible true.
+
+**test_usuario_no_registrado_agrega_producto**
+Usuario sin autenticacion intenta crear producto. Resultado: 401 Unauthorized.
+
+**test_usuario_agrega_producto_nombre_duplicado**
+Intenta crear producto con nombre ya existente. Resultado: 422 Unprocessable Entity.
+
+**test_usuario_agrega_producto_con_datos_incompletos**
+Intenta crear producto sin campo price. Resultado: 422 Unprocessable Entity.
+
+**test_usuario_agrega_producto_con_stock_cero**
+Intenta crear producto con stock 0. Resultado: 422 Unprocessable Entity.
+
+**test_usuario_modifica_producto**
+Usuario autenticado modifica producto existente. Resultado: 200 OK, datos actualizados correctamente.
+
+**test_usuario_no_registrado_modifica_producto**
+Usuario sin autenticacion intenta modificar producto. Resultado: 401 Unauthorized.
+
+**test_usuario_elimina_producto**
+Usuario autenticado elimina producto existente. Resultado: 200 OK.
+
+**test_usuario_no_registrado_elimina_producto**
+Usuario sin autenticacion intenta eliminar producto. Resultado: 401 Unauthorized.
+
+**test_usuario_elimina_producto_no_registrado**
+Usuario autenticado intenta eliminar producto inexistente. Resultado: 404 Not Found.
+
+Ejecutar: php artisan test --filter ProductApiTest
+
+---
+
+## CartApiTest - Modulo Carrito API
+
+**test_usuario_agrega_producto_al_carrito**
+Usuario autenticado agrega producto al carrito. Resultado: 200 OK.
+
+**test_usuario_no_registrado_agrega_producto_al_carrito**
+Usuario sin autenticacion intenta agregar producto al carrito. Resultado: 401 Unauthorized.
+
+**test_usuario_agrega_dos_veces_el_producto_al_carrito**
+Usuario agrega producto dos veces, verificando que el stock se descuente correctamente. Primera compra 9 unidades (OK), segunda compra 3 unidades (stock insuficiente). Resultado: 422 Unprocessable Entity.
+
+**test_ver_carrito**
+Usuario autenticado visualiza el contenido de su carrito. Resultado: 200 OK.
+
+**test_usuario_quita_producto_del_carrito**
+Usuario autenticado quita producto del carrito. Agrega 5 unidades, quita 2 unidades. Resultado: 200 OK, cantidad restante 3 unidades.
+
+**test_usuario_realiza_checkout**
+Usuario autenticado realiza checkout con direccion de envio. Resultado: 201 Created, devuelve mensaje de confirmacion y estructura completa de la orden con items.
+
+Ejecutar: php artisan test --filter CartApiTest
+
+---
+
+## Simulacion Servicio Externo
+
+**test_precio_final_con_tarjeta**
+Calcula precio final de producto con descuento por pago con tarjeta. Precio base 100, resultado esperado 121.
+
+**test_precio_final_con_transferencia**
+Calcula precio final de producto con descuento por pago con transferencia. Precio base 100, resultado esperado 111.
+
+## Ejecutar: php artisan test --filter ProductPriceTest
+
+## Comandos Generales
+
+Ejecutar todas las pruebas: php artisan test
+
+Ejecutar prueba especifica: php artisan test --filter nombre_del_test

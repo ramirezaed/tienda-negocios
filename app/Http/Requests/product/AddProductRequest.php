@@ -25,7 +25,7 @@ class AddProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name" => "required|string",
+            "name" => "required|string|unique:products",
             "description" => "required|string",
             "price" => "required|decimal:0,2|gt:0",
             "stock" => "required|integer|gt:0",
@@ -39,6 +39,7 @@ class AddProductRequest extends FormRequest
         return [
             'name.required' => 'El nombre es obligatorio.',
             'name.string' => 'El nombre debe ser texto.',
+            "name.unique" => "ya existe un producto con ese nombre",
 
             'description.required' => 'La descripción es obligatoria.',
             'description.string' => 'La descripción debe ser texto.',

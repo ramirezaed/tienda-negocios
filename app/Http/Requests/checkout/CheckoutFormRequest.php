@@ -23,16 +23,14 @@ class CheckoutFormRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|integer|exists:users,id',
+
             'shipping_address' => 'required|string',
         ];
     }
     public function messages(): array
     {
         return [
-            'user_id.required' => 'El campo usuario es obligatorio.',
-            'user_id.integer' => 'El id de usuario debe ser un número entero.',
-            'user_id.exists' => 'El usuario seleccionado no existe en nuestra base de datos.',
+
             'shipping_address.required' => 'La dirección de envío es obligatoria.',
             'shipping_address.string' => 'La dirección de envío debe ser un texto válido.',
         ];
