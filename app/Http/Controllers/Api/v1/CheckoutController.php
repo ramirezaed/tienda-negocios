@@ -18,10 +18,11 @@ class CheckoutController extends Controller
     {
         //obtiene el id del usuario que viene en el request
         //input busca en el request el dato especifico que se le pide -> (user_id)
-        $userId = $request->input('user_id');
+        // $userId = $request->input('user_id');
+        $userId = auth('api')->id();
         //request es un objeto que viene de formrequest, se extrae el id que es 
         //int que espera el servicio
-        $sumary = $this->checkoutService->getSummary($userId);
+        $sumary = $this->checkoutService->getSummary();
         return response()->json($sumary);
     }
 
@@ -32,7 +33,6 @@ class CheckoutController extends Controller
         //llama al servicio checkout, pasa los datos validados del request
         //se registra la compra en la tabla order
         $order = $this->checkoutService->processCheckout(
-            $request->validated('user_id'),
             $request->validated('shipping_address'),
         );
 

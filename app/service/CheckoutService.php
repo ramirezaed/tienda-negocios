@@ -22,7 +22,7 @@ class CheckoutService
         //si no hay carrito, o si esta vacio
         if (!$cart || $cart->items->isEmpty()) {
             //exeption  formateada en bootstrap/app
-            throw new BadRequestException(400, "El carrito está vacío.");
+            throw new BadRequestException("El carrito está vacío.", 400);
         }
         return $cart;
     }
