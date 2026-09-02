@@ -12,6 +12,32 @@ class ProductApiTest extends TestCase
 {
     use RefreshDatabase;
 
+
+    public function test_ver_lista_productos(): void
+    {
+        Category::factory()->create();
+        Product::factory()->create();
+
+        $response = $this->getJson('/api/V1/products');
+        // $response->assertOk();
+        $response->assertOk()
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => [
+                        'id',
+                        'name',
+                        'description',
+                        'price',
+                        'stock',
+                        'disponible',
+                        'actualizado',
+                        'category_id',
+                        'category name'
+                    ]
+                ]
+            ]);
+    }
+
     public function test_usuario_agrega_producto(): void
     {
         // Arrange
@@ -40,6 +66,7 @@ class ProductApiTest extends TestCase
             ->assertJsonPath('category name', $category->name)
             ->assertJsonPath('disponible', true);
     }
+
     public function test_usuario_no_registrado_agrega_producto(): void
     {
         // Arrange
@@ -104,7 +131,6 @@ class ProductApiTest extends TestCase
         // Assert - Verificar estructura
         $response->assertUnprocessable();
     }
-
     public function test_usuario_agrega_producto_con_stock_cero(): void
     {
         // Arrange
@@ -176,7 +202,6 @@ class ProductApiTest extends TestCase
         $response->assertUnauthorized();
     }
 
-
     public function test_usuario_elimina_producto(): void
     {
         // Arrange
@@ -194,7 +219,6 @@ class ProductApiTest extends TestCase
         $response->assertOk();
     }
 
-
     public function test_usuario_no_registrado_elimina_producto(): void
     {
         // Arrange
@@ -209,8 +233,7 @@ class ProductApiTest extends TestCase
         $response->assertUnauthorized();
     }
 
-
-    public function test_usuario_elimina_producto_no_registrado(): void
+    public function test_usuario_elimina_producto_no_existente(): void
     {
         // Arrange
         $user = User::factory()->create();

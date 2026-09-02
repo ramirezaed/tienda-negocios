@@ -405,6 +405,40 @@ Ejecutar: php artisan test --filter ProductApiTest
 
 ---
 
+## CartApiTest - Modulo Carrito API
+
+**test_usuario_agrega_producto_al_carrito**
+Usuario autenticado agrega producto al carrito. Resultado: 200 OK.
+
+**test_usuario_no_registrado_agrega_producto_al_carrito**
+Usuario sin autenticacion intenta agregar producto al carrito. Resultado: 401 Unauthorized.
+
+**test_usuario_agrega_dos_veces_el_producto_al_carrito**
+Usuario agrega producto dos veces, verificando que el stock se descuente correctamente. Primera compra 9 unidades (OK), segunda compra 3 unidades (stock insuficiente). Resultado: 422 Unprocessable Entity.
+
+**test_ver_carrito**
+Usuario autenticado visualiza el contenido de su carrito. Resultado: 200 OK.
+
+**test_usuario_quita_producto_del_carrito**
+Usuario autenticado quita producto del carrito. Agrega 5 unidades, quita 2 unidades. Resultado: 200 OK, cantidad restante 3 unidades.
+
+**test_usuario_realiza_checkout**
+Usuario autenticado realiza checkout con direccion de envio. Resultado: 201 Created, devuelve mensaje de confirmacion y estructura completa de la orden con items.
+
+Ejecutar: php artisan test --filter CartApiTest
+
+---
+
+## Simulacion Servicio Externo
+
+**test_precio_final_con_tarjeta**
+Calcula precio final de producto con descuento por pago con tarjeta. Precio base 100, resultado esperado 121.
+
+**test_precio_final_con_transferencia**
+Calcula precio final de producto con descuento por pago con transferencia. Precio base 100, resultado esperado 111.
+
+## Ejecutar: php artisan test --filter ProductPriceTest
+
 ## Comandos Generales
 
 Ejecutar todas las pruebas: php artisan test

@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class CartItem extends Model
 {
+    use HasFactory;
     //se define el nombre en plural de la tabla que usara este modelo
     protected $table = "cart_items";
     //se define los campos para na insercion masiva

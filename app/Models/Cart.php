@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Cart extends Model
 {
+    use HasFactory;
     //Se define el nombre de la tabla que debe usar este modelo(evitar que busque carts)
     protected $table = "cart";
     //se  define los campos para la insercion masiva
